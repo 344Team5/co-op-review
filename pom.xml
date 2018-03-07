@@ -4,11 +4,14 @@
     <groupId>344team5</groupId>
     <artifactId>co-op-review</artifactId>
     <version>1</version>
+    <name>RIT Co-op Review</name>
+    <url>https://co-op-review.herokuapp.com/</url>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -16,15 +19,41 @@
             </plugin>
             <plugin>
                 <groupId>com.heroku.sdk</groupId>
+
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>2.0.3</version>
+                <configuration>
+                    <jdkVersion>1.8</jdkVersion>
+                    <appName>co-op-review</appName>
+                    <processTypes>
+                        <web>java -jar ./target/co-op-review-1-jar-with-dependencies.jar</web>
+                    </processTypes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>CoopReview</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
 
     </build>
-    <packaging>war</packaging>
-    <name>RIT Co-op Review</name>
-    <url>https://co-op-review.herokuapp.com/</url>
 
     <dependencies>
         <dependency>
