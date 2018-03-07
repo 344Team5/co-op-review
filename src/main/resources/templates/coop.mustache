@@ -8,10 +8,16 @@
 <p>End date: {{ employer.endDate }} </p>
 
 <h5>Work Report</h5>
-<p>{{ coop.workReport }}</p>
+<p>
+    {{#workReport}}{{workReport}}{{/workReport}}
+    {{^workReport}}No work report has been completed for this co-op.{{/workReport}}
+</p>
 
-<h5>Student Evaluation by {{ employer.name }} </h5>
-<p>{{ coop.studentEvaluation }}</p>
+<h5>Student Evaluation</h5>
+<p>
+    {{#studentEvaluation}}{{studentEvaluation}}{{/studentEvaluation}}
+    {{^studentEvaluation}}No student evaluation has been completed for this co-op.{{/studentEvaluation}}
+</p>
 
 {{> footer }}
 </html>

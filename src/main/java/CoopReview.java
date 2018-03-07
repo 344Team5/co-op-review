@@ -25,6 +25,12 @@ public class CoopReview implements SparkApplication {
 
         HashMap<String, Object> modelData = new HashMap<>();
 
+        before((req, res) -> { // redirect requests with trailing '/'
+            String path = req.pathInfo();
+            if (path.endsWith("/") && !path.equals("/"))
+                res.redirect(path.substring(0, path.length() - 1));
+        });
+
         get("/", (request, response) -> {
             return templateEngine.render(
                     new ModelAndView(modelData, "homepage.mustache")
@@ -39,23 +45,51 @@ public class CoopReview implements SparkApplication {
         get("/student", ((request, response) -> { // "logged in" page
             Student s = new Student(1, "David", "dwg", "242342");
             s.addCoop(new Coop(2, s, new Employer(3, "Emp","Addr","Site")));
+            s.addCoop(new Coop(3, s, new Employer(4, "Emp2","Addr2","Site2")));
 
             return templateEngine.render(
                     new ModelAndView(s, "student.mustache")
             );
         }));
 
-        get("/student/coop/:cid", ((request, response) -> {
-            int id = Integer.parseInt(request.params(":cid"));
+        get("/student/coops/register", (request, response) -> {
+            return "Not implemented yet";
+        });
+
+        get("/student/coops", ((request, response) -> {
+            Student s = new Student(1, "David", "dwg", "242342");
+            Coop c = new Coop(4, s, new Employer(5, "Emp3", "Addr3", "Site3"));
+            c.setStudentEvaluation(c.new StudentEvaluation("Good job!"));
             return templateEngine.render(
-                    new ModelAndView(modelData, "coop.mustache")
+                    new ModelAndView(c, "coop.mustache")
             );
         }));
 
-        get("/review/:token", ((request, response) -> null)); // external reviewer
-        post("/review/:token", (request, response) -> "");
+        get("/review/:token", ((request, response) -> { // external reviewer completing student eval
+            return templateEngine.render(
+                    new ModelAndView(modelData, "eval.mustache")
+            );
+        }));
+
+        post("/review/:token", (request, response) -> {
+            return "Submitted successfully!";
+        });
 
         get("/admin", (request, response) -> null);
+
+        notFound((request, response) -> { // handle 404 error
+            modelData.put("message", "Whoops, couldn't find that page!");
+            return templateEngine.render(
+                    new ModelAndView(modelData, "error.mustache")
+            );
+        });
+
+        internalServerError((request, response) -> { // handle 500 error
+            modelData.put("message", "Something went wrong...");
+            return templateEngine.render(
+                    new ModelAndView(modelData, "error.mustache")
+            );
+        });
     }
 
     private int assignPort() {

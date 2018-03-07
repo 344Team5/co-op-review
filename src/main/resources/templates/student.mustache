@@ -5,11 +5,13 @@
 
 <h3>Welcome, {{ name }} </h3>
 <p>Select a Co-op:</p>
+<ul>
 {{#coops}}
-<a href="./student/coop/{{id}}">Co-op at {{employer}}</a>
+    <li><a href="./student/coops?id={{id}}">Co-op at {{employer}}</a></li>
 {{/coops}}
-
-<p><a href="./student/coop/register/">Register a Co-op</a></p>
+</ul>
+<p>Need to add a new co-op?</p>
+<p><a href="./student/coops/register/">Register a Co-op</a></p>
 
 {{> footer }}
 </html>

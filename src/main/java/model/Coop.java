@@ -47,7 +47,7 @@ public class Coop {
         return "Coop at" + employer;
     }
 
-    class WorkReport {
+    public class WorkReport {
         private String content;
 
         public WorkReport(String content) {
@@ -59,7 +59,7 @@ public class Coop {
         }
     }
 
-    class StudentEvaluation {
+    public class StudentEvaluation {
         private String content;
 
         public StudentEvaluation(String content) {
