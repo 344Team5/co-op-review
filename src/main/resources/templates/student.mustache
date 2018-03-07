@@ -3,7 +3,13 @@
 
 {{> header }}
 
-<h3>Welcome, {{ user }} </h3>
+<h3>Welcome, {{ name }} </h3>
+<p>Select a Co-op:</p>
+{{#coops}}
+<a href="./student/coop/{{id}}">Co-op at {{employer}}</a>
+{{/coops}}
+
+<p><a href="./student/coop/register/">Register a Co-op</a></p>
 
 {{> footer }}
 </html>

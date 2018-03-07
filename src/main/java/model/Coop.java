@@ -1,15 +1,21 @@
 package model;
 
 public class Coop {
+    private final int id;
     private Student student;
     private Employer employer;
 
-    private String coopWorkReport;
-    private String studentEvaluation;
+    private WorkReport workReport;
+    private StudentEvaluation studentEvaluation;
 
-    public Coop(Student student, Employer employer) {
+    public Coop(int id, Student student, Employer employer) {
+        this.id = id;
         this.student = student;
         this.employer = employer;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Student getStudent() {
@@ -20,19 +26,48 @@ public class Coop {
         return employer;
     }
 
-    public String getCoopWorkReport() {
-        return coopWorkReport;
+    public WorkReport getWorkReport() {
+        return workReport;
     }
 
-    public String getStudentEvaluation() {
+    public StudentEvaluation getStudentEvaluation() {
         return studentEvaluation;
     }
 
-    public void setCoopWorkReport(String coopWorkReport) {
-        this.coopWorkReport = coopWorkReport;
+    public void setWorkReport(WorkReport workReport) {
+        this.workReport = workReport;
     }
 
-    public void setStudentEvaluation(String studentEvaluation) {
+    public void setStudentEvaluation(StudentEvaluation studentEvaluation) {
         this.studentEvaluation = studentEvaluation;
+    }
+
+    @Override
+    public String toString() {
+        return "Coop at" + employer;
+    }
+
+    class WorkReport {
+        private String content;
+
+        public WorkReport(String content) {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
+        }
+    }
+
+    class StudentEvaluation {
+        private String content;
+
+        public StudentEvaluation(String content) {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
+        }
     }
 }

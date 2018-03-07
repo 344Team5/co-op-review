@@ -1,5 +1,8 @@
 import static spark.Spark.*;
 
+import model.Coop;
+import model.Employer;
+import model.Student;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
@@ -13,7 +16,6 @@ import java.util.HashMap;
  * Read http://sparkjava.com/documentation.html
  */
 public class CoopReview implements SparkApplication {
-    static FakeDB db = new FakeDB();
     public void init() {
         port(assignPort());
 
@@ -30,20 +32,21 @@ public class CoopReview implements SparkApplication {
         });
 
         post("/", ((request, response) -> { // this will be login in R2
-            modelData.put("user", db.students.get(1).getName());
             response.redirect("/student");
             return "";
         }));
 
         get("/student", ((request, response) -> { // "logged in" page
+            Student s = new Student(1, "David", "dwg", "242342");
+            s.addCoop(new Coop(2, s, new Employer(3, "Emp","Addr","Site")));
+
             return templateEngine.render(
-                    new ModelAndView(modelData, "student.mustache")
+                    new ModelAndView(s, "student.mustache")
             );
         }));
 
         get("/student/coop/:cid", ((request, response) -> {
             int id = Integer.parseInt(request.params(":cid"));
-            modelData.put("coop", db.coops.get(id));
             return templateEngine.render(
                     new ModelAndView(modelData, "coop.mustache")
             );
