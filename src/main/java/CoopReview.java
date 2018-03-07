@@ -34,26 +34,39 @@ public class CoopReview implements SparkApplication {
             return "";
         }));
 
-        get("/coops", ((request, response) -> { // "logged in" page
+        get("/student", ((request, response) -> { // "logged in" page
             return templateEngine.render(
-                    new ModelAndView(model, "coops.mustache")
+                    new ModelAndView(model, "student.mustache")
             );
         }));
 
-        /* Example path route for API
-        path("/api", () -> {
-            path("/email", () -> {
-                post("/add",       EmailApi.addEmail);
-                put("/change",     EmailApi.changeEmail);
-                delete("/remove",  EmailApi.deleteEmail);
+
+        /* API ROUTES
+        path("api/v1", () -> {
+            path("/students", () -> {
+                get("/", (request, response) -> null); // get all students
+                get("/:sid", (request, response) -> "hi"); // get one student
             });
-            path("/username", () -> {
-                post("/add",       UserApi.addUsername);
-                put("/change",     UserApi.changeUsername);
-                delete("/remove",  UserApi.deleteUsername);
+
+            path("/employers", () -> {
+                get("/", ((request, response) -> null)); // get all employers
+                get("/:eid", (request, response) -> null); // get one employer
+            });
+
+            get("/coops", ((request, response) -> null)); // get all co-ops
+            path("/coops/:cid", () -> {
+                get("/", ((request, response) -> null)); // get one co-op
+                get("/student", (request, response) -> null); // get the co-op's associated student
+                get("/employer", ((request, response) -> null)); // get the co-op's associated employer
+                get("/studentEvaluation", ((request, response) -> null)); // get the student evaluation
+                get("/coopWorkReport", ((request, response) -> null)); // get the co-op work report
+                get("/employerReview", (request, response) -> null); //get the employer review
             });
         });
         */
+        /* END API ROUTES */
+
+
     }
 
     public static void main(String[] args) {
