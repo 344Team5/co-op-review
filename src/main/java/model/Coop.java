@@ -4,8 +4,8 @@ public class Coop {
     private Student student;
     private Employer employer;
 
-    private CoopWorkReport coopWorkReport;
-    private StudentEvaluation studentEvaluation;
+    private String coopWorkReport;
+    private String studentEvaluation;
 
     public Coop(Student student, Employer employer) {
         this.student = student;
@@ -20,19 +20,19 @@ public class Coop {
         return employer;
     }
 
-    public CoopWorkReport getCoopWorkReport() {
+    public String getCoopWorkReport() {
         return coopWorkReport;
     }
 
-    public StudentEvaluation getStudentEvaluation() {
+    public String getStudentEvaluation() {
         return studentEvaluation;
     }
 
-    public void setCoopWorkReport(CoopWorkReport coopWorkReport) {
+    public void setCoopWorkReport(String coopWorkReport) {
         this.coopWorkReport = coopWorkReport;
     }
 
-    public void setStudentEvaluation(StudentEvaluation studentEvaluation) {
+    public void setStudentEvaluation(String studentEvaluation) {
         this.studentEvaluation = studentEvaluation;
     }
 }
