@@ -1,0 +1,17 @@
+<html>
+{{> head }}
+
+{{> header }}
+
+<h3>Co-op at {{ employer.name }} </h3>
+<p>Start date:  {{ employer.startDate }} </p>
+<p>End date: {{ employer.endDate }} </p>
+
+<h5>Work Report</h5>
+<p>{{ coop.coopWorkReport }}</p>
+
+<h5>Student Evaluation by {{ employer.name }} </h5>
+<p>{{ coop.studentEvaluation }}</p>
+
+{{> footer }}
+</html>

@@ -5,7 +5,6 @@ import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This is the starting point for the application.  Run this in IntelliJ to test
@@ -14,59 +13,43 @@ import java.util.Map;
  * Read http://sparkjava.com/documentation.html
  */
 public class CoopReview implements SparkApplication {
+    static FakeDB db = new FakeDB();
     public void init() {
         MustacheTemplateEngine templateEngine = new MustacheTemplateEngine();
 
+
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        Map<String, Object> model = new HashMap<>();
+        HashMap<String, Object> modelData = new HashMap<>();
 
         get("/", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(model, "homepage.mustache")
+                    new ModelAndView(modelData, "homepage.mustache")
             );
         });
 
         post("/", ((request, response) -> { // this will be login in R2
-            String username = request.queryParams("username");
-            model.put("user", username); // fake login
-            response.redirect("/coops");
+            modelData.put("user", db.students.get(1).getName());
+            response.redirect("/student");
             return "";
         }));
 
         get("/student", ((request, response) -> { // "logged in" page
             return templateEngine.render(
-                    new ModelAndView(model, "student.mustache")
+                    new ModelAndView(modelData, "student.mustache")
             );
         }));
 
+        get("/student/coop/:cid", ((request, response) -> {
+            int id = Integer.parseInt(request.params(":cid"));
+            modelData.put("coop", db.coops.get(id));
+            return templateEngine.render(
+                    new ModelAndView(modelData, "coop.mustache")
+            );
+        }));
 
-        /* API ROUTES
-        path("api/v1", () -> {
-            path("/students", () -> {
-                get("/", (request, response) -> null); // get all students
-                get("/:sid", (request, response) -> "hi"); // get one student
-            });
-
-            path("/employers", () -> {
-                get("/", ((request, response) -> null)); // get all employers
-                get("/:eid", (request, response) -> null); // get one employer
-            });
-
-            get("/coops", ((request, response) -> null)); // get all co-ops
-            path("/coops/:cid", () -> {
-                get("/", ((request, response) -> null)); // get one co-op
-                get("/student", (request, response) -> null); // get the co-op's associated student
-                get("/employer", ((request, response) -> null)); // get the co-op's associated employer
-                get("/studentEvaluation", ((request, response) -> null)); // get the student evaluation
-                get("/coopWorkReport", ((request, response) -> null)); // get the co-op work report
-                get("/employerReview", (request, response) -> null); //get the employer review
-            });
-        });
-        */
-        /* END API ROUTES */
-
-
+        get("/review/:token", ((request, response) -> null)); // external reviewer
+        post("/review/:token", (request, response) -> "");
     }
 
     public static void main(String[] args) {
