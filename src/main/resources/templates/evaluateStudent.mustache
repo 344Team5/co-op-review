@@ -1,14 +1,21 @@
+{{! External Reviewer submit Student evaluation page }}
 <html>
 {{> head }}
 
 {{> header }}
 
+{{^success}}
 <h3>Submit an evaluation of a student:</h3>
-<form id="evalform" action="/review/{{token}}" method="POST">
+<form id="evalform" action="/review/{{reviewToken}}" method="POST">
     <label for="evaluation">Evaluation:</label>
     <textarea id="evaluation" name="evaluation" form="evalform"></textarea>
     <input type="submit" value="Submit">
 </form>
+{{/success}}
+
+{{#success}}
+    <h3>Submitted evaluation successfully!</h3>
+{{/success}}
 
 {{> footer }}
 </html>
