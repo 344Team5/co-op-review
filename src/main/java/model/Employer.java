@@ -70,6 +70,23 @@ public class Employer {
         return name;
     }
 
+    public boolean equals(Employer employer){
+        if( this.getId() == employer.getId() &&
+            this.getName().equals(employer.getName()) &&
+            this.getAddress().equals(employer.getAddress()) &&
+            this.getWebsite().equals(employer.getWebsite())
+        ){
+            for(int i = 0; i < this.getReviews().size(); i++){
+                if( !this.getReviews().get(i).equals(employer.getReviews().get(i)) )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     /** A Review contains a Student author and a String representing the Review content */
     public class Review {
         /** The Student who wrote the review.  This is not shown publicly */
@@ -97,6 +114,16 @@ public class Employer {
         @Override
         public String toString() {
             return review;
+        }
+
+        public boolean equals(Review review){
+            if( this.getAuthor().equals(review.getAuthor()) &&
+                this.getReview().equals(review.getReview()))
+            {
+                return true;
+            }else {
+                return false;
+            }
         }
     }
 }
