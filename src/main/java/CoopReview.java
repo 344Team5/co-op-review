@@ -8,6 +8,7 @@ import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the starting point for the application.  Run this in IntelliJ to test
@@ -23,7 +24,6 @@ public class CoopReview implements SparkApplication {
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        HashMap<String, Object> modelData = new HashMap<>();
 
         before((req, res) -> { // redirect requests with trailing '/'
             String path = req.pathInfo();
@@ -33,7 +33,7 @@ public class CoopReview implements SparkApplication {
 
         get("/", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(modelData, "homepage.mustache")
+                    new ModelAndView(null, "homepage.mustache")
             );
         });
 
@@ -43,31 +43,25 @@ public class CoopReview implements SparkApplication {
         }));
 
         get("/student", ((request, response) -> { // "logged in" page
-            Student s = new Student(1, "David", "dwg", "242342");
-            s.addCoop(new Coop(2, s, new Employer(3, "Emp","Addr","Site")));
-            s.addCoop(new Coop(3, s, new Employer(4, "Emp2","Addr2","Site2")));
-
             return templateEngine.render(
-                    new ModelAndView(s, "student.mustache")
+                    new ModelAndView(null, "student.mustache")
             );
         }));
 
         get("/student/coops/register", (request, response) -> {
+            response.status(501);
             return "Not implemented yet";
         });
 
         get("/student/coops", ((request, response) -> {
-            Student s = new Student(1, "David", "dwg", "242342");
-            Coop c = new Coop(4, s, new Employer(5, "Emp3", "Addr3", "Site3"));
-            c.setStudentEvaluation(c.new StudentEvaluation("Good job!"));
             return templateEngine.render(
-                    new ModelAndView(c, "coop.mustache")
+                    new ModelAndView(null, "coop.mustache")
             );
         }));
 
         get("/review/:token", ((request, response) -> { // external reviewer completing student eval
             return templateEngine.render(
-                    new ModelAndView(modelData, "eval.mustache")
+                    new ModelAndView(null, "eval.mustache")
             );
         }));
 
@@ -77,15 +71,16 @@ public class CoopReview implements SparkApplication {
 
         get("/admin", (request, response) -> null);
 
+        Map<String,Object> modelData = new HashMap<>();
         notFound((request, response) -> { // handle 404 error
-            modelData.put("message", "Whoops, couldn't find that page!");
+            modelData.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
                     new ModelAndView(modelData, "error.mustache")
             );
         });
 
         internalServerError((request, response) -> { // handle 500 error
-            modelData.put("message", "Something went wrong...");
+            modelData.put("message", "500: Something went wrong...");
             return templateEngine.render(
                     new ModelAndView(modelData, "error.mustache")
             );
