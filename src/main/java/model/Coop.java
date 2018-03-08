@@ -16,7 +16,10 @@ public class Coop {
 
     public Coop(int id, Student student, Employer employer, Date startDate, Date endDate) {
         this.id = id;
+
         this.student = student;
+        this.student.addCoop(this);
+
         this.employer = employer;
         this.startDate = startDate;
         this.endDate = endDate;

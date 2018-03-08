@@ -4,7 +4,7 @@
 {{> header }}
 
 <h3>Submit an evaluation of a student:</h3>
-<form id="evalform" action="/review/12312" method="POST">
+<form id="evalform" action="/review/{{token}}" method="POST">
     <label for="evaluation">Evaluation:</label>
     <textarea id="evaluation" name="evaluation" form="evalform"></textarea>
     <input type="submit" value="Submit">

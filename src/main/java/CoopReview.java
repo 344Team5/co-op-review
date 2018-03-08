@@ -1,5 +1,8 @@
 import static spark.Spark.*;
 
+import dao.CoopDao;
+import dao.EmployerDao;
+import dao.StudentDao;
 import model.Coop;
 import model.Employer;
 import model.Student;
@@ -17,6 +20,11 @@ import java.util.Map;
  * Read http://sparkjava.com/documentation.html
  */
 public class CoopReview implements SparkApplication {
+
+    private CoopDao coopDao = new CoopDao();
+    private EmployerDao employerDao = new EmployerDao();
+    private StudentDao studentDao = new StudentDao();
+
     public void init() {
         port(assignPort());
 
@@ -44,7 +52,7 @@ public class CoopReview implements SparkApplication {
 
         get("/student", ((request, response) -> { // "logged in" page
             return templateEngine.render(
-                    new ModelAndView(null, "student.mustache")
+                    new ModelAndView(studentDao.get(0), "student.mustache")
             );
         }));
 
@@ -55,13 +63,13 @@ public class CoopReview implements SparkApplication {
 
         get("/student/coops", ((request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(null, "coop.mustache")
+                    new ModelAndView(coopDao.get(0), "coop.mustache")
             );
         }));
 
         get("/review/:token", ((request, response) -> { // external reviewer completing student eval
             return templateEngine.render(
-                    new ModelAndView(null, "eval.mustache")
+                    new ModelAndView(coopDao.get(0), "eval.mustache")
             );
         }));
 
@@ -69,7 +77,34 @@ public class CoopReview implements SparkApplication {
             return "Submitted successfully!";
         });
 
-        get("/admin", (request, response) -> null);
+        get("/employers", (request, response) -> {
+           return templateEngine.render(
+                   new ModelAndView(employerDao.getAll(), "employers.mustache")
+           );
+        });
+
+        get("/employers/:id", (request, response) -> {
+            return templateEngine.render(
+                    new ModelAndView(employerDao.get(0), "employers.mustache")
+            );
+        });
+
+        get("/admin/login", (request, response) -> {
+            return templateEngine.render(
+                    new ModelAndView(null, "homepage.mustache")
+            );
+        });
+
+        post("/admin/login", (request, response) -> {
+            response.redirect("/admin");
+            return "";
+        });
+
+        get("/admin",(request, response) -> {
+            return templateEngine.render(
+                    new ModelAndView(null, "admin.mustache")
+            );
+        });
 
         Map<String,Object> modelData = new HashMap<>();
         notFound((request, response) -> { // handle 404 error

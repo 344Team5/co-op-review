@@ -1,6 +1,5 @@
 package db;
 
-import dao.StudentDao;
 import model.Coop;
 import model.Employer;
 import model.Student;
