@@ -71,7 +71,7 @@ class CoopDaoTest {
      */
     @Test
     void get() {
-        assertTrue(coopDao.get(0).equals(FakeDB.getFakeDB().coopList.get(0)));
+        assertTrue(coopDao.get(0).equals(coopListTest.get(0)));
     }
 
     @Test

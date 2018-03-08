@@ -64,4 +64,23 @@ public class Student {
     public void addCoop(Coop coop) {
         coops.add(coop);
     }
+
+    public boolean equals(Student student){
+
+        if(this.getId() == student.getId() &&
+            this.getName().equals(student.getName()) &&
+            this.getUsername().equals(student.getUsername()) &&
+            this.getUniID().equals((student.getUniID()))
+        ){
+            for(int i = 0; i < this.getCoops().size(); i++){
+                if( !this.getCoops().get(i).equals(student.getCoops().get(i))){
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }
