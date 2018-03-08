@@ -6,11 +6,14 @@ import dao.StudentDao;
 import model.Coop;
 import model.Employer;
 import model.Student;
+import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +35,6 @@ public class CoopReview implements SparkApplication {
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-
         before((req, res) -> { // redirect requests with trailing '/'
             String path = req.pathInfo();
             if (path.endsWith("/") && !path.equals("/"))
@@ -46,20 +48,44 @@ public class CoopReview implements SparkApplication {
         });
 
         post("/", ((request, response) -> { // this will be login in R2
+            if (request.queryParams("username").equals("admin")) {
+                response.redirect("/admin");
+            }
             response.redirect("/student");
             return "";
         }));
 
         get("/student", ((request, response) -> { // "logged in" page
+            Map<String,Object> data = new HashMap<>();
+            data.put("student", studentDao.get(0));
+
+            List<Map<String,Object>> jobList = new ArrayList<>();
+            for (JSONObject o : new ExternalApiRequest().getResults() ) {
+                String companyName = o.getString("company");
+                if (companyName != null) {
+                    jobList.add(o.toMap());
+                }
+            }
+            data.put("jobs", jobList);
+
             return templateEngine.render(
-                    new ModelAndView(studentDao.get(0), "student.mustache")
+                    new ModelAndView(data, "student.mustache")
             );
         }));
 
         get("/student/coops/register", (request, response) -> {
-            response.status(501);
-            return "Not implemented yet";
+            return templateEngine.render(
+                    new ModelAndView(null, "register.mustache")
+            );
         });
+
+        post("/student/coops/register", ((request, response) -> { // this will be login in R2
+            Map<String,Object> data = new HashMap<>();
+            data.put("success", true);
+            return templateEngine.render(
+                    new ModelAndView(data, "register.mustache")
+            );
+        }));
 
         get("/student/coops", ((request, response) -> {
             return templateEngine.render(
@@ -83,41 +109,25 @@ public class CoopReview implements SparkApplication {
            );
         });
 
-        get("/employers/:id", (request, response) -> {
-            return templateEngine.render(
-                    new ModelAndView(employerDao.get(0), "employers.mustache")
-            );
-        });
-
-        get("/admin/login", (request, response) -> {
-            return templateEngine.render(
-                    new ModelAndView(null, "homepage.mustache")
-            );
-        });
-
-        post("/admin/login", (request, response) -> {
-            response.redirect("/admin");
-            return "";
-        });
-
         get("/admin",(request, response) -> {
             return templateEngine.render(
                     new ModelAndView(null, "admin.mustache")
             );
         });
 
-        Map<String,Object> modelData = new HashMap<>();
         notFound((request, response) -> { // handle 404 error
-            modelData.put("message", "404: Whoops, couldn't find that page!");
+            Map<String,Object> data = new HashMap<>();
+            data.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
-                    new ModelAndView(modelData, "error.mustache")
+                    new ModelAndView(data, "error.mustache")
             );
         });
 
         internalServerError((request, response) -> { // handle 500 error
-            modelData.put("message", "500: Something went wrong...");
+            Map<String,Object> data = new HashMap<>();
+            data.put("message", "500: Something went wrong...");
             return templateEngine.render(
-                    new ModelAndView(modelData, "error.mustache")
+                    new ModelAndView(data, "error.mustache")
             );
         });
     }

@@ -81,6 +81,11 @@ public class Coop {
         public String getContent() {
             return content;
         }
+
+        @Override
+        public String toString() {
+            return content;
+        }
     }
 
     public class StudentEvaluation {
@@ -91,6 +96,11 @@ public class Coop {
         }
 
         public String getContent() {
+            return content;
+        }
+
+        @Override
+        public String toString() {
             return content;
         }
     }
