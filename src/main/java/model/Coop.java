@@ -96,7 +96,24 @@ public class Coop {
 
     @Override
     public String toString() {
-        return "Coop at" + employer;
+        return "Coop at " + employer;
+    }
+
+
+    public boolean equals(Coop coop){
+        if( this.getId() == coop.getId() &&
+            //this.getEmployer() == coop.getEmployer() &&
+            //this.getStudent() == coop.getStudent() &&
+            //this.getStartDate().equals(coop.getStartDate()) &&
+            //this.getEndDate().equals(coop.getEndDate()) &&
+            this.getReviewToken().equals(coop.getReviewToken()) //&&
+            //this.getWorkReport().equals(coop.getWorkReport()) &&
+            //this.getStudentEvaluation().equals(coop.getStudentEvaluation())
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** A WorkReport contains a single String representing its content */
@@ -116,6 +133,14 @@ public class Coop {
         @Override
         public String toString() {
             return content;
+        }
+
+        public boolean equals(WorkReport workReport){
+            if(this.getContent().equals(workReport.getContent())){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -138,6 +163,14 @@ public class Coop {
         @Override
         public String toString() {
             return content;
+        }
+
+        public boolean equals(StudentEvaluation studentEvaluation){
+            if(this.getContent().equals(studentEvaluation.getContent())){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
