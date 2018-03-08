@@ -1,5 +1,5 @@
 import dao.CoopDao;
-import db.FakeDB;
+import dao.DatabaseApi;
 import model.Coop;
 import model.Employer;
 import model.Student;
@@ -22,7 +22,7 @@ class CoopDaoTest {
     @BeforeEach
     void setUp() {
 
-        coopDao = new CoopDao();
+        coopDao = new DatabaseApi().getCoopDao();
 
         coopListTest  = new ArrayList<>();
         employerListTest = new ArrayList<>();

@@ -1,5 +1,5 @@
+import dao.DatabaseApi;
 import dao.StudentDao;
-import db.FakeDB;
 import model.Coop;
 import model.Employer;
 import model.Student;
@@ -23,7 +23,7 @@ class StudentDaoTest {
     @BeforeEach
     void setUp() {
 
-        studentDao = new StudentDao();
+        studentDao = new DatabaseApi().getStudentDao();
 
         coopListTest  = new ArrayList<>();
         employerListTest = new ArrayList<>();
