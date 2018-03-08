@@ -1,0 +1,14 @@
+{{! Page for all Employers }}
+<html>
+{{> head }}
+
+{{> header }}
+
+<h3>Employers</h3>
+<ul>
+    {{#employers}}
+        <li><a href="/employers?id={{id}}">{{name}}</a></li>
+    {{/employers}}
+</ul>
+{{> footer }}
+</html>

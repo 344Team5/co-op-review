@@ -28,6 +28,11 @@ public class CoopDao implements IDao<Coop> {
         return FakeDB.getFakeDB().coopList.get(0);
     }
 
+    /** Get an existing Co-op by token (for External Reviewers) */
+    public Coop get(String token) {
+        return FakeDB.getFakeDB().coopList.get(0);
+    }
+
     /** Update an existing Co-op */
     @Override
     public void update(Coop object) {

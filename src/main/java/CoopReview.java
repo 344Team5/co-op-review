@@ -1,8 +1,10 @@
 import static spark.Spark.*;
 
 import dao.CoopDao;
+import dao.DatabaseApi;
 import dao.EmployerDao;
 import dao.StudentDao;
+import db.FakeDB;
 import model.Coop;
 import model.Employer;
 import model.Student;
@@ -17,18 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is the starting point for the application.  Run this in IntelliJ to test
- * on the embedded Jetty webserver (localhost:4567)
- *
- * Read http://sparkjava.com/documentation.html
+ * Co-op Review Main class
+ * Handles configuring and starting the web server
  */
 public class CoopReview implements SparkApplication {
-
-    private CoopDao coopDao = new CoopDao();
-    private EmployerDao employerDao = new EmployerDao();
-    private StudentDao studentDao = new StudentDao();
-
+    /** Set up the web application and handle requests */
     public void init() {
+        FakeDB.getFakeDB(); // initialize FakeDB
+        DatabaseApi db = new DatabaseApi(); // create db API
+
         port(assignPort()); // figure out which port to use
 
         MustacheTemplateEngine templateEngine = new MustacheTemplateEngine(); // create template engine to render pages
@@ -45,7 +44,7 @@ public class CoopReview implements SparkApplication {
         // Homepage (Login
         get("/", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(null, "homepage.mustache")
+                    new ModelAndView(null, "login.mustache")
             );
         });
 
@@ -61,7 +60,7 @@ public class CoopReview implements SparkApplication {
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
             Map<String,Object> data = new HashMap<>();
-            data.put("student", studentDao.get(0));
+            data.put("student", db.getStudentDao().get(0));
 
             // Get jobs from the GitHub jobs API
             List<Map<String,Object>> jobList = new ArrayList<>();
@@ -74,14 +73,14 @@ public class CoopReview implements SparkApplication {
             data.put("jobs", jobList);
 
             return templateEngine.render(
-                    new ModelAndView(data, "student.mustache")
+                    new ModelAndView(data, "studentHome.mustache")
             );
         }));
 
         // Form to register a new Coop
         get("/student/coops/register", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(null, "register.mustache")
+                    new ModelAndView(null, "registerCoop.mustache")
             );
         });
 
@@ -90,40 +89,61 @@ public class CoopReview implements SparkApplication {
             Map<String,Object> data = new HashMap<>();
             data.put("success", true);
             return templateEngine.render(
-                    new ModelAndView(data, "register.mustache")
+                    new ModelAndView(data, "registerCoop.mustache")
             );
         }));
 
         // Specific Co-op page, query by ID in R2
         get("/student/coops", ((request, response) -> {
-            return templateEngine.render(
-                    new ModelAndView(coopDao.get(0), "coop.mustache")
-            );
+            if (request.queryParams().contains("id")) {
+                int id = Integer.parseInt(request.queryParams("id"));
+                return templateEngine.render(
+                        new ModelAndView(db.getCoopDao().get(id), "coop.mustache")
+                );
+            } else {
+                return ""; // This should 404 if no id was provided
+            }
         }));
 
         // Form for External Reviewer to submit a StudentEvaluation
         get("/review/:token", ((request, response) -> { // external reviewer completing student eval
             return templateEngine.render(
-                    new ModelAndView(coopDao.get(0), "eval.mustache")
+                    new ModelAndView(db.getCoopDao().get(request.params("token")), "evaluateStudent.mustache")
             );
         }));
 
         // Handle POST from StudentEvaluation form
         post("/review/:token", (request, response) -> {
-            return "Submitted successfully!";
+            Map<String,Object> data = new HashMap<>();
+            data.put("success", true);
+            return templateEngine.render(
+                    new ModelAndView(data, "evaluateStudent.mustache")
+            );
         });
 
         // All Employers page, unless given specific query in R2
         get("/employers", (request, response) -> {
-           return templateEngine.render(
-                   new ModelAndView(employerDao.getAll(), "employers.mustache")
-           );
+            if (request.queryParams().contains("id")) {
+                int id = Integer.parseInt(request.queryParams("id"));
+                return templateEngine.render(
+                        new ModelAndView(db.getEmployerDao().get(id), "employer.mustache")
+                );
+            } else {
+                Map<String,Object> data = new HashMap<>();
+                data.put("employers",db.getEmployerDao().getAll());
+                return templateEngine.render(
+                        new ModelAndView(data,"employers.mustache")
+                );
+            }
         });
 
         // Admin control main page
         get("/admin",(request, response) -> {
+            Map<String,Object> data = new HashMap<>();
+            data.put("coops",db.getCoopDao().getAll());
+            data.put("employers",db.getEmployerDao().getAll());
             return templateEngine.render(
-                    new ModelAndView(null, "admin.mustache")
+                    new ModelAndView(data, "admin.mustache")
             );
         });
 

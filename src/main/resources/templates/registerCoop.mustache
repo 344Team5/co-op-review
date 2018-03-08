@@ -1,10 +1,11 @@
+{{! New Co-op Registration page }}
 <html>
 {{> head }}
 
 {{> header }}
 
 {{^success}}
-<h3>Submit an new co-op:</h3>
+<h3>Submit a new co-op:</h3>
 <form id="coopform" action="/student/coops/register" method="POST">
     <label for="employer">Employer:</label>
     <input type="text" id="employer" name="employer">
@@ -15,6 +16,7 @@
     <input type="submit" value="Submit">
 </form>
 {{/success}}
+
 {{#success}}
     <h3>Submitted new co-op successfully!</h3>
     <a href="/student/">Back to student home</a>
