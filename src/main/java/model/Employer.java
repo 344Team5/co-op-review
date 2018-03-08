@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Employer class represents a single Employer/External Reviewer
+ * The Employer class represents a single Employer/External Reviewer.
  */
 public class Employer {
     private final int id; // ID of the Employer
