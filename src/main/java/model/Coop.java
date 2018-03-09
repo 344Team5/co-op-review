@@ -106,14 +106,34 @@ public class Coop {
             //this.getStudent() == coop.getStudent() &&
             //this.getStartDate().equals(coop.getStartDate()) &&
             //this.getEndDate().equals(coop.getEndDate()) &&
-            this.getReviewToken().equals(coop.getReviewToken()) //&&
-            //this.getWorkReport().equals(coop.getWorkReport()) &&
-            //this.getStudentEvaluation().equals(coop.getStudentEvaluation())
+            this.getReviewToken().equals(coop.getReviewToken()) &&
+            workReportNull(coop) &&
+            studentEvaluationNull(coop)
         ) {
             return true;
         } else {
             return false;
         }
+    }
+
+    private boolean workReportNull(Coop coop){
+        boolean result;
+        try{
+            result = this.getWorkReport().equals(coop.getWorkReport());
+        }catch (NullPointerException nptr){
+            return true;
+        }
+        return result;
+    }
+
+    private boolean studentEvaluationNull(Coop coop){
+        boolean result;
+        try{
+            result = this.getStudentEvaluation().equals(coop.getStudentEvaluation());
+        }catch (NullPointerException nptr){
+            return true;
+        }
+        return result;
     }
 
     /** A WorkReport contains a single String representing its content */
