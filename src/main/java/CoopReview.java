@@ -1,5 +1,7 @@
 import dao.DatabaseApi;
 import db.FakeDB;
+import model.Coop;
+import model.Student;
 import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
@@ -56,7 +58,13 @@ public class CoopReview implements SparkApplication {
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
             Map<String, Object> data = new HashMap<>();
-            data.put("student", db.getStudentDao().get(0));
+            Student s = db.getStudentDao().get(0);
+            data.put("student", s);
+            List<Coop> coops = new ArrayList<>();
+            for ( int id : s.getCoopIDs() ) {
+                coops.add(db.getCoopDao().get(id));
+            }
+            data.put("coops", coops);
 
             // Get jobs from the GitHub jobs API
             List<Map<String, Object>> jobList = new ArrayList<>();

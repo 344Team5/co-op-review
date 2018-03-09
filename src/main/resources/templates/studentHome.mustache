@@ -7,11 +7,11 @@
 <h3>Welcome, {{ student.name }} </h3>
 <p>Select a Co-op:</p>
 <ul>
-    {{#student.coops}}
+    {{#coops}}
         <li><a href="./student/coops?id={{id}}">Co-op at {{employer}}</a></li>
-    {{/student.coops}}
+    {{/coops}}
 
-    {{^student.coops}}<li>No co-ops were found.</li>{{/student.coops}}
+    {{^coops}}<li>No co-ops were found.</li>{{/coops}}
 </ul>
 <p>Need to add a new co-op?</p>
 <p><a href="./student/coops/register/">Register a Co-op</a></p>
