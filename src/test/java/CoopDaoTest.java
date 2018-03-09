@@ -41,10 +41,10 @@ class CoopDaoTest {
         employerListTest.add(e2);
 
         Coop c1,c2;
-        c1 = new Coop(1, s1, e1, new Date(), new Date());
+        c1 = new Coop(1, s1, e1, coopDao.get(0).getStartDate(), coopDao.get(0).getEndDate());
         c1.setStudentEvaluation(c1.new StudentEvaluation("Betty was an awesome co-op student. 10/10 would hire"));
         c1.setWorkReport(c1.new WorkReport("During my co-op at Google, I wrote code."));
-        c2 = new Coop(2, s2, e2, new Date(), new Date());
+        c2 = new Coop(2, s2, e2, coopDao.get(1).getStartDate(), coopDao.get(1).getEndDate());
         coopListTest.add(c1);
         coopListTest.add(c2);
     }
