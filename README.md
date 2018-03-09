@@ -8,7 +8,7 @@ A replacement for RIT's current co-op review system.
 
 **Team Members:**
 * David Grzebinski (dwg7486@rit.edu)
-`Project Coordinator` `VM Manager`
+`Project Coordinator | Development Coordinator`
 * Christian Greaves (cxg4749@rit.edu) 
 `Testing Coordinator`
 * Quintin Reed (qar4778@rit.edu) 
@@ -19,13 +19,13 @@ A replacement for RIT's current co-op review system.
 ---
 
 **Features:**
-* Students can...
+* Students can . . .
   * Register co-ops
   * Submit co-op reports
   * Submit employer reviews
   * View relevant job postings
   * View company pages with info on salaries, reviews, etc.
-* Employers / external reviewers can ...
+* Employers / external reviewers can . . .
   * Submit student evaluations
-* Admins can ...
+* Admins can . . .
   * View / edit / delete all reviews and company pages
