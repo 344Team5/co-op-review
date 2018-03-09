@@ -29,7 +29,7 @@ class CoopDaoTest {
     @Test
     void getAll() {
         List<Coop> allCoops = coopDao.getAll();
-        for (int i = 0; i < allCoops.size(); i++) {
+        for (int i = 1; i < allCoops.size(); i++) {
             assertTrue(allCoops.get(i).equals(coopListTest.get(i)));
         }
     }
@@ -44,7 +44,7 @@ class CoopDaoTest {
      */
     @Test
     void get() {
-        assertTrue(coopDao.get(0).equals(coopListTest.get(0)));
+        assertTrue(coopDao.get(1).equals(coopListTest.get(1)));
     }
 
     @Test
