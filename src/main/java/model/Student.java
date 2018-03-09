@@ -11,7 +11,7 @@ public class Student {
     private String name; // The name of the Student
     private String username; // The username of the Student
     private String uniID; // The university ID of the Student
-    private List<Integer> coops; // The list of the Student's Coops
+    private List<Integer> coops; // The list of the Student's Coops by ID
 
     private static int idCount = 0; // private ID counter
 
@@ -28,7 +28,7 @@ public class Student {
         this.name = name;
         this.username = username;
         this.uniID = uniID;
-        coops = new ArrayList<Integer>();
+        coops = new ArrayList<>();
     }
 
     /**
@@ -69,7 +69,7 @@ public class Student {
     /**
      * Get the Student's list of Coops represented by IDs
      */
-    public List<Integer> getCoops() {
+    public List<Integer> getCoopIDs() {
         return coops;
     }
 
@@ -87,8 +87,8 @@ public class Student {
                 this.getUsername().equals(student.getUsername()) &&
                 this.getUniID().equals((student.getUniID()))
                 ) {
-            for (int i = 0; i < this.getCoops().size(); i++) {
-                if (!this.getCoops().get(i).equals(student.getCoops().get(i))) {
+            for (int i = 0; i < this.getCoopIDs().size(); i++) {
+                if (!this.getCoopIDs().get(i).equals(student.getCoopIDs().get(i))) {
                     return false;
                 }
             }

@@ -2,8 +2,6 @@ import dao.CoopDao;
 import dao.DatabaseApi;
 import db.FakeDB;
 import model.Coop;
-import model.Employer;
-import model.Student;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,21 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CoopDaoTest {
 
     private List<Coop> coopListTest;
-    private List<Employer> employerListTest;
-    private List<Student> studentListTest;
     private CoopDao coopDao;
 
     @BeforeEach
     void setUp() {
-
         coopDao = new DatabaseApi().getCoopDao();
-
         FakeDB fakeDb = FakeDB.getFakeDB();
-
         coopListTest = fakeDb.coopList;
-        employerListTest = fakeDb.employerList;
-        studentListTest = fakeDb.studentList;
-
     }
 
     @AfterEach
