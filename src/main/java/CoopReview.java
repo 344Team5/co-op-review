@@ -1,13 +1,5 @@
-import static spark.Spark.*;
-
-import dao.CoopDao;
 import dao.DatabaseApi;
-import dao.EmployerDao;
-import dao.StudentDao;
 import db.FakeDB;
-import model.Coop;
-import model.Employer;
-import model.Student;
 import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
@@ -18,12 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static spark.Spark.*;
+
 /**
  * Co-op Review Main class
  * Handles configuring and starting the web server
  */
 public class CoopReview implements SparkApplication {
-    /** Set up the web application and handle requests */
+    /**
+     * Set up the web application and handle requests
+     */
     public void init() {
         FakeDB.getFakeDB(); // initialize FakeDB
         DatabaseApi db = new DatabaseApi(); // create db API
@@ -59,12 +55,12 @@ public class CoopReview implements SparkApplication {
 
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("student", db.getStudentDao().get(0));
 
             // Get jobs from the GitHub jobs API
-            List<Map<String,Object>> jobList = new ArrayList<>();
-            for (JSONObject o : new ExternalApiRequest().getResults() ) {
+            List<Map<String, Object>> jobList = new ArrayList<>();
+            for (JSONObject o : new ExternalApiRequest().getResults()) {
                 String companyName = o.getString("company");
                 if (companyName != null) {
                     jobList.add(o.toMap());
@@ -86,7 +82,7 @@ public class CoopReview implements SparkApplication {
 
         // Handle POST from new Coop form
         post("/student/coops/register", ((request, response) -> { // this will be login in R2
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("success", true);
             return templateEngine.render(
                     new ModelAndView(data, "registerCoop.mustache")
@@ -114,7 +110,7 @@ public class CoopReview implements SparkApplication {
 
         // Handle POST from StudentEvaluation form
         post("/review/:token", (request, response) -> {
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("success", true);
             return templateEngine.render(
                     new ModelAndView(data, "evaluateStudent.mustache")
@@ -129,19 +125,19 @@ public class CoopReview implements SparkApplication {
                         new ModelAndView(db.getEmployerDao().get(id), "employer.mustache")
                 );
             } else {
-                Map<String,Object> data = new HashMap<>();
-                data.put("employers",db.getEmployerDao().getAll());
+                Map<String, Object> data = new HashMap<>();
+                data.put("employers", db.getEmployerDao().getAll());
                 return templateEngine.render(
-                        new ModelAndView(data,"employers.mustache")
+                        new ModelAndView(data, "employers.mustache")
                 );
             }
         });
 
         // Admin control main page
-        get("/admin",(request, response) -> {
-            Map<String,Object> data = new HashMap<>();
-            data.put("coops",db.getCoopDao().getAll());
-            data.put("employers",db.getEmployerDao().getAll());
+        get("/admin", (request, response) -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("coops", db.getCoopDao().getAll());
+            data.put("employers", db.getEmployerDao().getAll());
             return templateEngine.render(
                     new ModelAndView(data, "admin.mustache")
             );
@@ -152,7 +148,7 @@ public class CoopReview implements SparkApplication {
 
         // handle 404 error
         notFound((request, response) -> {
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
                     new ModelAndView(data, "error.mustache")
@@ -161,7 +157,7 @@ public class CoopReview implements SparkApplication {
 
         // handle 500 error
         internalServerError((request, response) -> {
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("message", "500: Something went wrong...");
             return templateEngine.render(
                     new ModelAndView(data, "error.mustache")
@@ -169,7 +165,9 @@ public class CoopReview implements SparkApplication {
         });
     }
 
-    /** Find out what port to use based on where the application is (Default: 4567) */
+    /**
+     * Find out what port to use based on where the application is (Default: 4567)
+     */
     private int assignPort() {
         int port = 4567;
         ProcessBuilder processBuilder = new ProcessBuilder();
@@ -179,7 +177,9 @@ public class CoopReview implements SparkApplication {
         return port;
     }
 
-    /** Start the web application */
+    /**
+     * Start the web application
+     */
     public static void main(String[] args) {
         new CoopReview().init();
     }

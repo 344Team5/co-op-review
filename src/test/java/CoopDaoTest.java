@@ -7,11 +7,10 @@ import model.Student;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CoopDaoTest {
 
@@ -40,7 +39,7 @@ class CoopDaoTest {
     @Test
     void getAll() {
         List<Coop> allCoops = coopDao.getAll();
-        for(int i = 0; i < allCoops.size(); i++){
+        for (int i = 0; i < allCoops.size(); i++) {
             assertTrue(allCoops.get(i).equals(coopListTest.get(i)));
         }
     }

@@ -17,8 +17,9 @@ public class Employer {
 
     /**
      * Construct an Employer
-     * @param id associated ID
-     * @param name name of Employer
+     *
+     * @param id      associated ID
+     * @param name    name of Employer
      * @param address address of Employer
      * @param website website of Employer
      */
@@ -30,37 +31,51 @@ public class Employer {
         reviews = new ArrayList<>();
     }
 
-    /** Create an Employer without providing an id */
+    /**
+     * Create an Employer without providing an id
+     */
     public Employer(String name, String address, String website) {
         this(idCount++, name, address, website);
     }
 
-    /** Get the ID of the Employer */
+    /**
+     * Get the ID of the Employer
+     */
     public int getId() {
         return id;
     }
 
-    /** Get the name of the Employer */
+    /**
+     * Get the name of the Employer
+     */
     public String getName() {
         return name;
     }
 
-    /** Get the address of the Employer */
+    /**
+     * Get the address of the Employer
+     */
     public String getAddress() {
         return address;
     }
 
-    /** Get the website url of the Employer */
+    /**
+     * Get the website url of the Employer
+     */
     public String getWebsite() {
         return website;
     }
 
-    /** Add a Review of the Employer to its list of Reviews */
+    /**
+     * Add a Review of the Employer to its list of Reviews
+     */
     public void addReview(Review review) {
         reviews.add(review);
     }
 
-    /** Get the Employer's list of Reviews */
+    /**
+     * Get the Employer's list of Reviews
+     */
     public List<Review> getReviews() {
         return reviews;
     }
@@ -70,15 +85,14 @@ public class Employer {
         return name;
     }
 
-    public boolean equals(Employer employer){
-        if( this.getId() == employer.getId() &&
-            this.getName().equals(employer.getName()) &&
-            this.getAddress().equals(employer.getAddress()) &&
-            this.getWebsite().equals(employer.getWebsite())
-        ){
-            for(int i = 0; i < this.getReviews().size(); i++){
-                if( !this.getReviews().get(i).equals(employer.getReviews().get(i)) )
-                {
+    public boolean equals(Employer employer) {
+        if (this.getId() == employer.getId() &&
+                this.getName().equals(employer.getName()) &&
+                this.getAddress().equals(employer.getAddress()) &&
+                this.getWebsite().equals(employer.getWebsite())
+                ) {
+            for (int i = 0; i < this.getReviews().size(); i++) {
+                if (!this.getReviews().get(i).equals(employer.getReviews().get(i))) {
                     return false;
                 }
             }
@@ -87,26 +101,38 @@ public class Employer {
         return false;
     }
 
-    /** A Review contains a Student author and a String representing the Review content */
+    /**
+     * A Review contains a Student author and a String representing the Review content
+     */
     public class Review {
-        /** The Student who wrote the review.  This is not shown publicly */
+        /**
+         * The Student who wrote the review.  This is not shown publicly
+         */
         private Student author;
 
-        /** The content of the Review */
+        /**
+         * The content of the Review
+         */
         private String review;
 
-        /** Construct a Review */
+        /**
+         * Construct a Review
+         */
         public Review(Student author, String review) {
             this.author = author;
             this.review = review;
         }
 
-        /** Get the Student who is the author of the Review */
+        /**
+         * Get the Student who is the author of the Review
+         */
         public Student getAuthor() {
             return author;
         }
 
-        /** Get the content of the Review */
+        /**
+         * Get the content of the Review
+         */
         public String getReview() {
             return review;
         }
@@ -116,12 +142,11 @@ public class Employer {
             return review;
         }
 
-        public boolean equals(Review review){
-            if( this.getAuthor().equals(review.getAuthor()) &&
-                this.getReview().equals(review.getReview()))
-            {
+        public boolean equals(Review review) {
+            if (this.getAuthor().equals(review.getAuthor()) &&
+                    this.getReview().equals(review.getReview())) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         }

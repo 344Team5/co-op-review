@@ -17,10 +17,11 @@ public class Student {
 
     /**
      * The Student class represents a signle Student
-     * @param id associated ID
-     * @param name Student's name
+     *
+     * @param id       associated ID
+     * @param name     Student's name
      * @param username Student's username
-     * @param uniID Student's university ID
+     * @param uniID    Student's university ID
      */
     public Student(int id, String name, String username, String uniID) {
         this.id = id;
@@ -30,50 +31,64 @@ public class Student {
         coops = new ArrayList<Integer>();
     }
 
-    /** Construct a Student without providing an id */
+    /**
+     * Construct a Student without providing an id
+     */
     public Student(String name, String username, String uniID) {
         this(idCount++, name, username, uniID);
     }
 
-    /** Get the ID of the Student */
+    /**
+     * Get the ID of the Student
+     */
     public int getId() {
         return id;
     }
 
-    /** Get the name of the Student */
+    /**
+     * Get the name of the Student
+     */
     public String getName() {
         return name;
     }
 
-    /** Get the username of the Student*/
+    /**
+     * Get the username of the Student
+     */
     public String getUsername() {
         return username;
     }
 
-    /** Get the university ID of the Student */
+    /**
+     * Get the university ID of the Student
+     */
     public String getUniID() {
         return uniID;
     }
 
-    /** Get the Student's list of Coops represented by IDs */
+    /**
+     * Get the Student's list of Coops represented by IDs
+     */
     public List<Integer> getCoops() {
         return coops;
     }
 
-    /** Associate a Coop with the Student */
+    /**
+     * Associate a Coop with the Student
+     */
     public void addCoop(Coop coop) {
         coops.add(coop.getId());
     }
 
-    public boolean equals(Student student){
+    public boolean equals(Student student) {
 
-        if(this.getId() == student.getId() &&
-            this.getName().equals(student.getName()) &&
-            this.getUsername().equals(student.getUsername()) &&
-            this.getUniID().equals((student.getUniID()))
-        ){
-            for(int i = 0; i < this.getCoops().size(); i++){
-                if( !this.getCoops().get(i).equals(student.getCoops().get(i))){
+        if (this.getId() == student.getId() &&
+                this.getName().equals(student.getName()) &&
+                this.getUsername().equals(student.getUsername()) &&
+                this.getUniID().equals((student.getUniID()))
+                ) {
+            for (int i = 0; i < this.getCoops().size(); i++) {
+                if (!this.getCoops().get(i).equals(student.getCoops().get(i))) {
                     return false;
                 }
             }

@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,13 +23,13 @@ public class ExternalApiRequest {
             br = new BufferedReader(new InputStreamReader(dataStream));
             StringBuilder data = new StringBuilder();
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 data.append(line);
             }
             String dataString = data.toString();
             JSONArray jArray = new JSONArray(dataString);
             List<JSONObject> tempList = new ArrayList<>();
-            for (int i = 0; i < jArray.length(); i++){
+            for (int i = 0; i < jArray.length(); i++) {
                 JSONObject o = jArray.getJSONObject(i);
                 tempList.add(o);
             }
@@ -42,7 +43,8 @@ public class ExternalApiRequest {
             try {
                 if (dataStream != null) dataStream.close();
                 if (br != null) br.close();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         return jList;

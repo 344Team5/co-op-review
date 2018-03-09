@@ -7,6 +7,7 @@ import java.util.List;
  * The dao package contains Data Access Objects for each entity in the model.  The DAOs separate low-level data access
  * operations from the rest of the application's code.  This separation allows for changing the underlying data store
  * without touching the main application code.
+ *
  * @param <T> Model object type
  */
 public interface IDao<T> {

@@ -17,12 +17,16 @@ public class DatabaseApi {
         studentDao = new StudentDao();
     }
 
-    /** Get the Coop DAO */
+    /**
+     * Get the Coop DAO
+     */
     public CoopDao getCoopDao() {
         return coopDao;
     }
 
-    /** Get the Employer DAO */
+    /**
+     * Get the Employer DAO
+     */
     public EmployerDao getEmployerDao() {
         return employerDao;
     }

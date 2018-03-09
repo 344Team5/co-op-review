@@ -9,10 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EmployerDaoTest {
     private List<Coop> coopListTest;
@@ -25,7 +24,7 @@ class EmployerDaoTest {
 
         employerDao = new DatabaseApi().getEmployerDao();
 
-        coopListTest  = new ArrayList<>();
+        coopListTest = new ArrayList<>();
         employerListTest = new ArrayList<>();
         studentListTest = new ArrayList<>();
 
@@ -43,7 +42,7 @@ class EmployerDaoTest {
     @Test
     void getAll() {
         List<Employer> allEmployers = employerDao.getAll();
-        for(int i = 0; i < allEmployers.size(); i++){
+        for (int i = 0; i < allEmployers.size(); i++) {
             assertTrue(allEmployers.get(i).equals(employerListTest.get(i)));
         }
     }
