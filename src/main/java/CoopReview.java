@@ -93,9 +93,8 @@ public class CoopReview implements SparkApplication {
         post("/student/coops/register", ((request, response) -> { // this will be login in R2
             Map<String, Object> data = new HashMap<>();
             data.put("success", true);
-            return templateEngine.render(
-                    new ModelAndView(data, "registerCoop.mustache")
-            );
+            response.redirect("/student");
+            return "";
         }));
 
         // Handle POST of Work Report form
