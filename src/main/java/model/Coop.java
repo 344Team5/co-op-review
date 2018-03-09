@@ -102,8 +102,8 @@ public class Coop {
 
     public boolean equals(Coop coop){
         if( this.getId() == coop.getId() &&
-            //this.getEmployer() == coop.getEmployer() &&
-            //this.getStudent() == coop.getStudent() &&
+            this.getEmployer().equals(coop.getEmployer()) &&
+            //this.getStudent().equals(coop.getStudent()) &&
             //this.getStartDate().equals(coop.getStartDate()) &&
             //this.getEndDate().equals(coop.getEndDate()) &&
             this.getReviewToken().equals(coop.getReviewToken()) &&
