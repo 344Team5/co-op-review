@@ -41,7 +41,7 @@ class StudentDaoTest {
 
     @Test
     void get() {
-        assertTrue(studentDao.get(1).equals(studentListTest.get(1)));
+        assertTrue(studentDao.get(1).equals(studentListTest.get(0)));
     }
 
     @Test

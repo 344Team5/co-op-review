@@ -41,7 +41,7 @@ class EmployerDaoTest {
 
     @Test
     void get() {
-        assertTrue(employerDao.get(1).equals(employerListTest.get(1)));
+        assertTrue(employerDao.get(1).equals(employerListTest.get(0)));
     }
 
     @Test

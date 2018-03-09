@@ -44,7 +44,7 @@ class CoopDaoTest {
      */
     @Test
     void get() {
-        assertTrue(coopDao.get(1).equals(coopListTest.get(1)));
+        assertTrue(coopDao.get(1).equals(coopListTest.get(0)));
     }
 
     @Test
