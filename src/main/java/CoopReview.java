@@ -1,6 +1,7 @@
 import dao.DatabaseApi;
 import db.FakeDB;
 import model.Coop;
+import model.Employer;
 import model.Student;
 import org.json.JSONObject;
 import spark.ModelAndView;
@@ -58,7 +59,7 @@ public class CoopReview implements SparkApplication {
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
             Map<String, Object> data = new HashMap<>();
-            Student s = db.getStudentDao().get(0);
+            Student s = db.getStudentDao().get(1);
             data.put("student", s);
             List<Coop> coops = new ArrayList<>();
             for ( int id : s.getCoopIDs() ) {
@@ -97,12 +98,24 @@ public class CoopReview implements SparkApplication {
             );
         }));
 
+        // Handle POST of Work Report form
+        post("/student/coops/workreport", (request, response) -> {
+            Map<String, Object> data = new HashMap<>();
+            int id = Integer.parseInt(request.queryParams("coopID"));
+            data.put("coop", db.getCoopDao().get(id));
+            data.put("success", true);
+            response.redirect("/student/coops?id=" + id);
+            return "";
+        });
+
         // Specific Co-op page, query by ID in R2
         get("/student/coops", ((request, response) -> {
             if (request.queryParams().contains("id")) {
+                Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
+                data.put("coop", db.getCoopDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(db.getCoopDao().get(id), "coop.mustache")
+                        new ModelAndView(data, "coop.mustache")
                 );
             } else {
                 return ""; // This should 404 if no id was provided
@@ -128,9 +141,11 @@ public class CoopReview implements SparkApplication {
         // All Employers page, unless given specific query in R2
         get("/employers", (request, response) -> {
             if (request.queryParams().contains("id")) {
+                Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
+                data.put("employer", db.getEmployerDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(db.getEmployerDao().get(id), "employer.mustache")
+                        new ModelAndView(data, "employer.mustache")
                 );
             } else {
                 Map<String, Object> data = new HashMap<>();
@@ -139,6 +154,17 @@ public class CoopReview implements SparkApplication {
                         new ModelAndView(data, "employers.mustache")
                 );
             }
+        });
+
+        // Handle POST from Employer Review form
+        post("/employers/review", (request, response) -> {
+            Map<String, Object> data = new HashMap<>();
+            int id = Integer.parseInt(request.queryParams("employerID"));
+            data.put("employer", db.getEmployerDao().get(id));
+            data.put("success", true);
+            return templateEngine.render(
+                    new ModelAndView(data, "employer.mustache")
+            );
         });
 
         // Admin control main page

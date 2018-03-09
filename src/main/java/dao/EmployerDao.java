@@ -31,7 +31,10 @@ public class EmployerDao implements IDao<Employer> {
      */
     @Override
     public Employer get(int id) {
-        return FakeDB.getFakeDB().employerList.get(0);
+        for (Employer e : FakeDB.db.employerList ) {
+            if (e.getId() == id) return e;
+        }
+        return null;
     }
 
     /**

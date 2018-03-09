@@ -31,14 +31,20 @@ public class CoopDao implements IDao<Coop> {
      */
     @Override
     public Coop get(int id) {
-        return FakeDB.getFakeDB().coopList.get(0);
+        for (Coop c : FakeDB.db.coopList ) {
+            if (c.getId() == id) return c;
+        }
+        return null;
     }
 
     /**
      * Get an existing Co-op by token (for External Reviewers)
      */
     public Coop get(String token) {
-        return FakeDB.getFakeDB().coopList.get(0);
+        for (Coop c : FakeDB.db.coopList ) {
+            if (c.getReviewToken().equals(token)) return c;
+        }
+        return null;
     }
 
     /**
