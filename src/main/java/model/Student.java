@@ -11,7 +11,7 @@ public class Student {
     private String name; // The name of the Student
     private String username; // The username of the Student
     private String uniID; // The university ID of the Student
-    private List<Coop> coops; // The list of the Student's Coops
+    private List<Integer> coops; // The list of the Student's Coops
 
     private static int idCount = 0; // private ID counter
 
@@ -27,7 +27,7 @@ public class Student {
         this.name = name;
         this.username = username;
         this.uniID = uniID;
-        coops = new ArrayList<>();
+        coops = new ArrayList<Integer>();
     }
 
     /** Construct a Student without providing an id */
@@ -55,14 +55,14 @@ public class Student {
         return uniID;
     }
 
-    /** Get the Student's list of Coops */
-    public List<Coop> getCoops() {
+    /** Get the Student's list of Coops represented by IDs */
+    public List<Integer> getCoops() {
         return coops;
     }
 
     /** Associate a Coop with the Student */
     public void addCoop(Coop coop) {
-        coops.add(coop);
+        coops.add(coop.getId());
     }
 
     public boolean equals(Student student){
