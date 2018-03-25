@@ -1,5 +1,5 @@
-import dao.DatabaseApi;
-import dao.EmployerDao;
+import api.DatabaseApi;
+import api.EmployerDao;
 import db.FakeDB;
 import model.Employer;
 import org.junit.jupiter.api.AfterEach;

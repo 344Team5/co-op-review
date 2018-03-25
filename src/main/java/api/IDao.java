@@ -1,10 +1,10 @@
-package dao;
+package api;
 
 import java.util.List;
 
 /**
  * Data access interface (API)
- * The dao package contains Data Access Objects for each entity in the model.  The DAOs separate low-level data access
+ * The api package contains Data Access Objects for each entity in the model.  The DAOs separate low-level data access
  * operations from the rest of the application's code.  This separation allows for changing the underlying data store
  * without touching the main application code.
  *

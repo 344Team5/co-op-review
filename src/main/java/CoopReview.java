@@ -1,7 +1,9 @@
-import dao.DatabaseApi;
+import api.CoopApi;
+import api.DatabaseApi;
+import api.EmployerApi;
+import api.StudentApi;
 import db.FakeDB;
 import model.Coop;
-import model.Employer;
 import model.Student;
 import org.json.JSONObject;
 import spark.ModelAndView;
@@ -24,20 +26,31 @@ public class CoopReview implements SparkApplication {
      * Set up the web application and handle requests
      */
     public void init() {
-        FakeDB.getFakeDB(); // initialize FakeDB
-        DatabaseApi db = new DatabaseApi(); // create db API
-
         port(assignPort()); // figure out which port to use
+        DatabaseApi db = new DatabaseApi();
 
         MustacheTemplateEngine templateEngine = new MustacheTemplateEngine(); // create template engine to render pages
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        /* START ROUTES */
+        frontEndPageRoutes(templateEngine);
+        errorPageRoutes(templateEngine);
+        internalAPIRoutes(db);
+    }
+
+    private void frontEndPageRoutes(MustacheTemplateEngine templateEngine) {
+        FakeDB.getFakeDB(); // initialize FakeDB
+        DatabaseApi db = new DatabaseApi(); // create db API
+
+        /*
         before((req, res) -> { // redirect requests with trailing '/'
             String path = req.pathInfo();
             if (path.endsWith("/") && !path.equals("/"))
                 res.redirect(path.substring(0, path.length() - 1));
+        });
+        */
+        before((req, res) -> { // redirect requests with trailing '/'
+            System.out.println("Received request: " + req.url());
         });
 
         // Homepage (Login
@@ -176,9 +189,9 @@ public class CoopReview implements SparkApplication {
             );
         });
 
-        /* END ROUTES */
+    }
 
-
+    private void errorPageRoutes(MustacheTemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
             Map<String, Object> data = new HashMap<>();
@@ -196,6 +209,48 @@ public class CoopReview implements SparkApplication {
                     new ModelAndView(data, "error.mustache")
             );
         });
+    }
+
+    private void internalAPIRoutes(DatabaseApi dbAPI) {
+        /* API Routes */
+        path("/api/v1", () -> {
+            path("/students", () -> {
+                get("", StudentApi::getStudents); // get all students
+                post("", StudentApi::addStudent); // create a student
+
+                path("/:sid", () -> { // one student
+                    get("", StudentApi::getStudent); // read
+                    put("", StudentApi::putStudent); // update/replace
+                    patch("", StudentApi::patchStudent); // update/modify
+                    delete("", StudentApi::deleteStudent); // delete
+                });
+
+            });
+            path("/employers", () -> {
+                get("", EmployerApi::getEmployers); // get all employers
+                post("", EmployerApi::addEmployer); // create an employer
+
+                path("/:eid", () -> { // one employer
+                    get("", EmployerApi::getEmployer); // read
+                    put("", EmployerApi::putEmployer); // update/replace
+                    patch("", EmployerApi::patchEmployer); // update/modify
+                    delete("", EmployerApi::deleteEmployer); // delete
+                });
+            });
+
+            path("/coops", () -> {
+                get("", CoopApi::getCoops); // get all co-ops
+                post("", CoopApi::addCoop); // create a co-op
+
+                path("/:cid", () -> { // one co-op
+                    get("", CoopApi::getCoop); // read
+                    put("", CoopApi::putCoop); // update/replace
+                    patch("", CoopApi::patchCoop); // update/modify
+                    delete("", CoopApi::deleteCoop); // delete
+                });
+            });
+        });
+        /* End API Routes */
     }
 
     /**

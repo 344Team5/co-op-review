@@ -1,5 +1,5 @@
-import dao.CoopDao;
-import dao.DatabaseApi;
+import api.CoopDao;
+import api.DatabaseApi;
 import db.FakeDB;
 import model.Coop;
 import org.junit.jupiter.api.AfterEach;

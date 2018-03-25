@@ -1,5 +1,5 @@
-import dao.DatabaseApi;
-import dao.StudentDao;
+import api.DatabaseApi;
+import api.StudentDao;
 import db.FakeDB;
 import model.Student;
 import org.junit.jupiter.api.AfterEach;
