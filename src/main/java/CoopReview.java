@@ -2,6 +2,8 @@ import api.CoopApi;
 import api.DatabaseApi;
 import api.EmployerApi;
 import api.StudentApi;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import db.FakeDB;
 import model.Coop;
 import model.Student;
@@ -10,6 +12,7 @@ import spark.ModelAndView;
 import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -271,4 +274,20 @@ public class CoopReview implements SparkApplication {
     public static void main(String[] args) {
         new CoopReview().init();
     }
+
+    // initial db stuff
+//    /**
+//     * Connect to database
+//     */
+//    private static ConnectionSource configureDatabaseConnection() throws SQLException {
+//        String dbUrl = "jdbc:postgresql://" +
+//                "ec2-23-21-121-220.compute-1.amazonaws.com" + ":" + // db host
+//                "5432" + "/" + "postgresql-round-13420"; // db port and db name
+//
+//        //dbUrl = "postgres://vzyphdktribuxj:b4114ffd44cf0f42fce1dc46b2bc6af259ecd573c44eafa07154957e402f9546@ec2-23-21-121-220.compute-1.amazonaws.com:5432/d3qd2c89etbdbh"; // as per URI on heroku page
+//        ConnectionSource connectionSource = new JdbcConnectionSource(dbUrl);
+//        ((JdbcConnectionSource) connectionSource).setUsername("vzyphdktribuxj");
+//        ((JdbcConnectionSource) connectionSource).setPassword("b4114ffd44cf0f42fce1dc46b2bc6af259ecd573c44eafa07154957e402f9546");
+//        return connectionSource;
+//    }
 }
