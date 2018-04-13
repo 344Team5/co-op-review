@@ -2,8 +2,6 @@ import api.CoopApi;
 import api.DatabaseApi;
 import api.EmployerApi;
 import api.StudentApi;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
 import db.FakeDB;
 import model.Coop;
 import model.Student;
@@ -12,6 +10,10 @@ import spark.ModelAndView;
 import spark.servlet.SparkApplication;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -275,19 +277,36 @@ public class CoopReview implements SparkApplication {
         new CoopReview().init();
     }
 
-    // initial db stuff
-//    /**
-//     * Connect to database
-//     */
-//    private static ConnectionSource configureDatabaseConnection() throws SQLException {
-//        String dbUrl = "jdbc:postgresql://" +
-//                "ec2-23-21-121-220.compute-1.amazonaws.com" + ":" + // db host
-//                "5432" + "/" + "postgresql-round-13420"; // db port and db name
-//
-//        //dbUrl = "postgres://vzyphdktribuxj:b4114ffd44cf0f42fce1dc46b2bc6af259ecd573c44eafa07154957e402f9546@ec2-23-21-121-220.compute-1.amazonaws.com:5432/d3qd2c89etbdbh"; // as per URI on heroku page
-//        ConnectionSource connectionSource = new JdbcConnectionSource(dbUrl);
-//        ((JdbcConnectionSource) connectionSource).setUsername("vzyphdktribuxj");
-//        ((JdbcConnectionSource) connectionSource).setPassword("b4114ffd44cf0f42fce1dc46b2bc6af259ecd573c44eafa07154957e402f9546");
-//        return connectionSource;
-//    }
+    /**
+     * Example for connecting to the database. Instantiates JDBC connection.
+     *
+     * Database URL is in the following format (values can be found in the credentials for our Heroku data store):
+     * jdbc:postgresql://<host>:<port>/<dbname>?user=<username>&password=<password>&sslmode=require
+     *
+     * System.getenv() should be able to get this from the Heroku app in production.
+     *
+     * The URL can be fetched by running "heroku run echo $JDBC_DATABASE_URL --app co-op-review"
+     * Note - a backslash should prepend the variable when running the command on Linux/Mac
+     *
+     * @return returns connection to the database
+     */
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        return DriverManager.getConnection(dbUrl);
+    }
+
+    /**
+     * Alternative way to get connection that involves using the database URL directly.
+     *
+     * @return returns connection to the database
+     */
+    private static Connection getConnectionAlt() throws URISyntaxException, SQLException {
+        URI dbUri = new URI(System.getenv("JDBC_DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
+
+        return DriverManager.getConnection(dbUrl, username, password);
+    }
 }
