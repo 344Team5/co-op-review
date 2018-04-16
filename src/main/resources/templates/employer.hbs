@@ -1,0 +1,41 @@
+{{! Page for one employer }}
+
+{{#partial "body"}}
+
+<h1>{{employer.name}}</h1>
+<h5>{{employer.address}}</h5>
+<h5>{{employer.website}}</h5>
+<hr/>
+<h3>Reviews</h3>
+<ul>
+    {{#each employer.reviews}}
+        <li>{{review}}</li>
+    {{/each}}
+</ul>
+
+{{#unless success}}
+<h5><a onclick="toggleHidden()" href="#">Leave a review</a></h5>
+<form id="reviewform" action="/employers/review" method="POST" style="display: none;">
+    <label for="review">Review:</label>
+    <textarea id="review" name="review" form="reviewform"></textarea>
+    <input type="hidden" name="employerID" value={{employer.id}}>
+    <input type="submit" value="Submit">
+</form>
+{{/unless}}
+
+{{#if success}}<h5>Review submitted successfully.</h5>{{/if}}
+
+<script>
+    function toggleHidden() {
+        var form = document.getElementById("reviewform");
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
+
+{{/partial}}
+
+{{> base.hbs}}

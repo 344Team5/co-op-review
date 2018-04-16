@@ -1,0 +1,22 @@
+{{! Admin control page }}
+{{#partial "body"}}
+
+<h3>Co-ops</h3>
+<p>Access student evaluation and work report records by co-op.</p>
+<ul>
+    {{#coops}}
+        <li><a href="/student/coops?id={{id}}">{{student.name}} - Co-op at {{employer}}</a></li>
+    {{/coops}}
+</ul>
+
+<h3>Employers</h3>
+<p>Access to employer records.</p>
+<ul>
+    {{#employers}}
+        <li><a href="/employers?id={{id}}">{{name}}</a></li>
+    {{/employers}}
+</ul>
+
+{{/partial}}
+
+{{> base.hbs}}
