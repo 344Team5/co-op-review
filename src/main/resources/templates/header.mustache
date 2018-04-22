@@ -1,9 +1,21 @@
 {{! Header to be included on every page }}
 <div class="title-bar">
-    <h1 class="title-bar-left">CO-OP PORTAL</h1>
-    <input type="search" class="title-bar-right" style="max-width: 50rem;" placeholder="Search for Employers...">
-    <img src="/img/betty-prof.jpg" class="title-bar-right" style="border-radius: 50%;
-            max-width: 100px; height: auto; margin-left: 50px"/>
-    <h3 style="margin-left: 10px; margin-right: 30px">Betty White</h3>
-    <button class="button" onclick="">Log Out</button>
+    <h1 class="title-bar-title">CO-OP PORTAL</h1>
+    <input type="search" class="title-bar-left" style="max-width: 60rem; margin-left: 30px" placeholder="Search for Employers...">
+    <div id="login_info" class="title-bar-right; menu">
+        <img id="person_img" src="/img/betty-prof.jpg" style="border-radius: 50%;
+            max-width: 75px; height: auto; margin-left: 50px"/>
+        <h3 class="menu-text" id="person_name" style="margin-left: 10px; margin-right: 10px;">Betty White</h3>
+        <button class="button" type="submit" onclick="window.location.replace('/')">Log Out</button>
+    </div>
+</div>
+<div class="top-bar">
+    <ul class="menu">
+        <li class="hyperlink; menu-item">
+            <a>Profile</a>
+        </li>
+        <li class="hyperlink; menu-item">
+            <a>Employer List</a>
+        </li>
+    </ul>
 </div>
