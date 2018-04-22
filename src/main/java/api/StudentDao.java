@@ -1,4 +1,4 @@
-package dao;
+package api;
 
 import db.FakeDB;
 import model.Student;
@@ -31,7 +31,10 @@ public class StudentDao implements IDao<Student> {
      */
     @Override
     public Student get(int id) {
-        return FakeDB.getFakeDB().studentList.get(0);
+        for (Student s : FakeDB.db.studentList ) {
+            if (s.getId() == id) return s;
+        }
+        return null;
     }
 
     /**

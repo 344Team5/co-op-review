@@ -1,5 +1,5 @@
-import dao.DatabaseApi;
-import dao.StudentDao;
+import api.DatabaseApi;
+import api.StudentDao;
 import db.FakeDB;
 import model.Student;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +29,7 @@ class StudentDaoTest {
     @Test
     void getAll() {
         List<Student> allStudents = studentDao.getAll();
-        for (int i = 0; i < allStudents.size(); i++) {
+        for (int i = 1; i < allStudents.size(); i++) {
             assertTrue(allStudents.get(i).equals(studentListTest.get(i)));
         }
     }
@@ -41,7 +41,7 @@ class StudentDaoTest {
 
     @Test
     void get() {
-        assertTrue(studentDao.get(0).equals(studentListTest.get(0)));
+        assertTrue(studentDao.get(1).equals(studentListTest.get(0)));
     }
 
     @Test

@@ -1,5 +1,5 @@
-import dao.DatabaseApi;
-import dao.EmployerDao;
+import api.DatabaseApi;
+import api.EmployerDao;
 import db.FakeDB;
 import model.Employer;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +29,7 @@ class EmployerDaoTest {
     @Test
     void getAll() {
         List<Employer> allEmployers = employerDao.getAll();
-        for (int i = 0; i < allEmployers.size(); i++) {
+        for (int i = 1; i < allEmployers.size(); i++) {
             assertTrue(allEmployers.get(i).equals(employerListTest.get(i)));
         }
     }
@@ -41,7 +41,7 @@ class EmployerDaoTest {
 
     @Test
     void get() {
-        assertTrue(employerDao.get(0).equals(employerListTest.get(0)));
+        assertTrue(employerDao.get(1).equals(employerListTest.get(0)));
     }
 
     @Test

@@ -1,4 +1,7 @@
-import dao.DatabaseApi;
+import api.CoopApi;
+import api.DatabaseApi;
+import api.EmployerApi;
+import api.StudentApi;
 import db.FakeDB;
 import model.Coop;
 import model.Student;
@@ -23,20 +26,31 @@ public class CoopReview implements SparkApplication {
      * Set up the web application and handle requests
      */
     public void init() {
-        FakeDB.getFakeDB(); // initialize FakeDB
-        DatabaseApi db = new DatabaseApi(); // create db API
-
         port(assignPort()); // figure out which port to use
+        DatabaseApi db = new DatabaseApi();
 
         MustacheTemplateEngine templateEngine = new MustacheTemplateEngine(); // create template engine to render pages
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        /* START ROUTES */
+        frontEndPageRoutes(templateEngine);
+        errorPageRoutes(templateEngine);
+        internalAPIRoutes(db);
+    }
+
+    private void frontEndPageRoutes(MustacheTemplateEngine templateEngine) {
+        FakeDB.getFakeDB(); // initialize FakeDB
+        DatabaseApi db = new DatabaseApi(); // create db API
+
+        /*
         before((req, res) -> { // redirect requests with trailing '/'
             String path = req.pathInfo();
             if (path.endsWith("/") && !path.equals("/"))
                 res.redirect(path.substring(0, path.length() - 1));
+        });
+        */
+        before((req, res) -> { // redirect requests with trailing '/'
+            System.out.println("Received request: " + req.url());
         });
 
         // Homepage (Login
@@ -58,7 +72,7 @@ public class CoopReview implements SparkApplication {
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
             Map<String, Object> data = new HashMap<>();
-            Student s = db.getStudentDao().get(0);
+            Student s = db.getStudentDao().get(1);
             data.put("student", s);
             List<Coop> coops = new ArrayList<>();
             for ( int id : s.getCoopIDs() ) {
@@ -92,17 +106,28 @@ public class CoopReview implements SparkApplication {
         post("/student/coops/register", ((request, response) -> { // this will be login in R2
             Map<String, Object> data = new HashMap<>();
             data.put("success", true);
-            return templateEngine.render(
-                    new ModelAndView(data, "registerCoop.mustache")
-            );
+            response.redirect("/student");
+            return "";
         }));
+
+        // Handle POST of Work Report form
+        post("/student/coops/workreport", (request, response) -> {
+            Map<String, Object> data = new HashMap<>();
+            int id = Integer.parseInt(request.queryParams("coopID"));
+            data.put("coop", db.getCoopDao().get(id));
+            data.put("success", true);
+            response.redirect("/student/coops?id=" + id);
+            return "";
+        });
 
         // Specific Co-op page, query by ID in R2
         get("/student/coops", ((request, response) -> {
             if (request.queryParams().contains("id")) {
+                Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
+                data.put("coop", db.getCoopDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(db.getCoopDao().get(id), "coop.mustache")
+                        new ModelAndView(data, "coop.mustache")
                 );
             } else {
                 return ""; // This should 404 if no id was provided
@@ -128,9 +153,11 @@ public class CoopReview implements SparkApplication {
         // All Employers page, unless given specific query in R2
         get("/employers", (request, response) -> {
             if (request.queryParams().contains("id")) {
+                Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
+                data.put("employer", db.getEmployerDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(db.getEmployerDao().get(id), "employer.mustache")
+                        new ModelAndView(data, "employer.mustache")
                 );
             } else {
                 Map<String, Object> data = new HashMap<>();
@@ -139,6 +166,17 @@ public class CoopReview implements SparkApplication {
                         new ModelAndView(data, "employers.mustache")
                 );
             }
+        });
+
+        // Handle POST from Employer Review form
+        post("/employers/review", (request, response) -> {
+            Map<String, Object> data = new HashMap<>();
+            int id = Integer.parseInt(request.queryParams("employerID"));
+            data.put("employer", db.getEmployerDao().get(id));
+            data.put("success", true);
+            return templateEngine.render(
+                    new ModelAndView(data, "employer.mustache")
+            );
         });
 
         // Admin control main page
@@ -151,9 +189,9 @@ public class CoopReview implements SparkApplication {
             );
         });
 
-        /* END ROUTES */
+    }
 
-
+    private void errorPageRoutes(MustacheTemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
             Map<String, Object> data = new HashMap<>();
@@ -171,6 +209,48 @@ public class CoopReview implements SparkApplication {
                     new ModelAndView(data, "error.mustache")
             );
         });
+    }
+
+    private void internalAPIRoutes(DatabaseApi dbAPI) {
+        /* API Routes */
+        path("/api/v1", () -> {
+            path("/students", () -> {
+                get("", StudentApi::getStudents); // get all students
+                post("", StudentApi::addStudent); // create a student
+
+                path("/:sid", () -> { // one student
+                    get("", StudentApi::getStudent); // read
+                    put("", StudentApi::putStudent); // update/replace
+                    patch("", StudentApi::patchStudent); // update/modify
+                    delete("", StudentApi::deleteStudent); // delete
+                });
+
+            });
+            path("/employers", () -> {
+                get("", EmployerApi::getEmployers); // get all employers
+                post("", EmployerApi::addEmployer); // create an employer
+
+                path("/:eid", () -> { // one employer
+                    get("", EmployerApi::getEmployer); // read
+                    put("", EmployerApi::putEmployer); // update/replace
+                    patch("", EmployerApi::patchEmployer); // update/modify
+                    delete("", EmployerApi::deleteEmployer); // delete
+                });
+            });
+
+            path("/coops", () -> {
+                get("", CoopApi::getCoops); // get all co-ops
+                post("", CoopApi::addCoop); // create a co-op
+
+                path("/:cid", () -> { // one co-op
+                    get("", CoopApi::getCoop); // read
+                    put("", CoopApi::putCoop); // update/replace
+                    patch("", CoopApi::patchCoop); // update/modify
+                    delete("", CoopApi::deleteCoop); // delete
+                });
+            });
+        });
+        /* End API Routes */
     }
 
     /**

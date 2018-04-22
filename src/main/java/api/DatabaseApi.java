@@ -1,12 +1,16 @@
-package dao;
+package api;
+
+import org.json.JSONStringer;
+import spark.Request;
+import spark.Response;
 
 /**
  * The entire database API, consisting of a collection of individual Data Access Objects
  */
 public class DatabaseApi {
-    private CoopDao coopDao; // the Coop DAO
-    private EmployerDao employerDao; // the Employer DAO
-    private StudentDao studentDao; // the Student DAO
+    protected CoopDao coopDao; // the Coop DAO
+    protected EmployerDao employerDao; // the Employer DAO
+    protected StudentDao studentDao; // the Student DAO
 
     /**
      * Initialize the API
@@ -34,5 +38,9 @@ public class DatabaseApi {
     /* Get the Student DAO */
     public StudentDao getStudentDao() {
         return studentDao;
+    }
+
+    public Object studentsRequest(Request request, Response response) {
+        return "GET: All Students";
     }
 }
