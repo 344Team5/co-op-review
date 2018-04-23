@@ -8,8 +8,13 @@ import model.Student;
 import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
-import spark.template.mustache.MustacheTemplateEngine;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +34,7 @@ public class CoopReview implements SparkApplication {
         port(assignPort()); // figure out which port to use
         DatabaseApi db = new DatabaseApi();
 
-        MustacheTemplateEngine templateEngine = new MustacheTemplateEngine(); // create template engine to render pages
+        HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine(); // create template engine to render pages
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
@@ -38,7 +43,7 @@ public class CoopReview implements SparkApplication {
         internalAPIRoutes(db);
     }
 
-    private void frontEndPageRoutes(MustacheTemplateEngine templateEngine) {
+    private void frontEndPageRoutes(HandlebarsTemplateEngine templateEngine) {
         FakeDB.getFakeDB(); // initialize FakeDB
         DatabaseApi db = new DatabaseApi(); // create db API
 
@@ -56,7 +61,7 @@ public class CoopReview implements SparkApplication {
         // Homepage (Login
         get("/", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(null, "login.mustache")
+                    new ModelAndView(null, "login.hbs")
             );
         });
 
@@ -91,14 +96,14 @@ public class CoopReview implements SparkApplication {
             data.put("jobs", jobList);
 
             return templateEngine.render(
-                    new ModelAndView(data, "studentHome.mustache")
+                    new ModelAndView(data, "studentHome.hbs")
             );
         }));
 
         // Form to register a new Coop
         get("/student/coops/register", (request, response) -> {
             return templateEngine.render(
-                    new ModelAndView(null, "registerCoop.mustache")
+                    new ModelAndView(null, "registerCoop.hbs")
             );
         });
 
@@ -127,7 +132,7 @@ public class CoopReview implements SparkApplication {
                 int id = Integer.parseInt(request.queryParams("id"));
                 data.put("coop", db.getCoopDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(data, "coop.mustache")
+                        new ModelAndView(data, "coop.hbs")
                 );
             } else {
                 return ""; // This should 404 if no id was provided
@@ -137,7 +142,7 @@ public class CoopReview implements SparkApplication {
         // Form for External Reviewer to submit a StudentEvaluation
         get("/review/:token", ((request, response) -> { // external reviewer completing student eval
             return templateEngine.render(
-                    new ModelAndView(db.getCoopDao().get(request.params("token")), "evaluateStudent.mustache")
+                    new ModelAndView(db.getCoopDao().get(request.params("token")), "evaluateStudent.hbs")
             );
         }));
 
@@ -146,7 +151,7 @@ public class CoopReview implements SparkApplication {
             Map<String, Object> data = new HashMap<>();
             data.put("success", true);
             return templateEngine.render(
-                    new ModelAndView(data, "evaluateStudent.mustache")
+                    new ModelAndView(data, "evaluateStudent.hbs")
             );
         });
 
@@ -157,13 +162,13 @@ public class CoopReview implements SparkApplication {
                 int id = Integer.parseInt(request.queryParams("id"));
                 data.put("employer", db.getEmployerDao().get(id));
                 return templateEngine.render(
-                        new ModelAndView(data, "employer.mustache")
+                        new ModelAndView(data, "employer.hbs")
                 );
             } else {
                 Map<String, Object> data = new HashMap<>();
                 data.put("employers", db.getEmployerDao().getAll());
                 return templateEngine.render(
-                        new ModelAndView(data, "employers.mustache")
+                        new ModelAndView(data, "employers.hbs")
                 );
             }
         });
@@ -175,7 +180,7 @@ public class CoopReview implements SparkApplication {
             data.put("employer", db.getEmployerDao().get(id));
             data.put("success", true);
             return templateEngine.render(
-                    new ModelAndView(data, "employer.mustache")
+                    new ModelAndView(data, "employer.hbs")
             );
         });
 
@@ -185,19 +190,19 @@ public class CoopReview implements SparkApplication {
             data.put("coops", db.getCoopDao().getAll());
             data.put("employers", db.getEmployerDao().getAll());
             return templateEngine.render(
-                    new ModelAndView(data, "admin.mustache")
+                    new ModelAndView(data, "admin.hbs")
             );
         });
 
     }
 
-    private void errorPageRoutes(MustacheTemplateEngine templateEngine) {
+    private void errorPageRoutes(HandlebarsTemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
             Map<String, Object> data = new HashMap<>();
             data.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
-                    new ModelAndView(data, "error.mustache")
+                    new ModelAndView(data, "error.hbs")
             );
         });
 
@@ -206,7 +211,7 @@ public class CoopReview implements SparkApplication {
             Map<String, Object> data = new HashMap<>();
             data.put("message", "500: Something went wrong...");
             return templateEngine.render(
-                    new ModelAndView(data, "error.mustache")
+                    new ModelAndView(data, "error.hbs")
             );
         });
     }
@@ -270,5 +275,38 @@ public class CoopReview implements SparkApplication {
      */
     public static void main(String[] args) {
         new CoopReview().init();
+    }
+
+    /**
+     * Example for connecting to the database. Instantiates JDBC connection.
+     *
+     * Database URL is in the following format (values can be found in the credentials for our Heroku data store):
+     * jdbc:postgresql://<host>:<port>/<dbname>?user=<username>&password=<password>&sslmode=require
+     *
+     * System.getenv() should be able to get this from the Heroku app in production.
+     *
+     * The URL can be fetched by running "heroku run echo $JDBC_DATABASE_URL --app co-op-review"
+     * Note - a backslash should prepend the variable when running the command on Linux/Mac
+     *
+     * @return returns connection to the database
+     */
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        return DriverManager.getConnection(dbUrl);
+    }
+
+    /**
+     * Alternative way to get connection that involves using the database URL directly.
+     *
+     * @return returns connection to the database
+     */
+    private static Connection getConnectionAlt() throws URISyntaxException, SQLException {
+        URI dbUri = new URI(System.getenv("JDBC_DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
+
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 }

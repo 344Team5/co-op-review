@@ -1,0 +1,13 @@
+{{! Page for all Employers }}
+{{#partial "body"}}
+
+<h3>Employers</h3>
+<ul>
+    {{#each employers}}
+        <li><a href="/employers?id={{id}}">{{name}}</a></li>
+    {{/each}}
+</ul>
+
+{{/partial}}
+
+{{> base.hbs}}

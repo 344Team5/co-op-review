@@ -1,0 +1,20 @@
+{{! External Reviewer submit Student evaluation page }}
+
+{{#partial "body"}}
+
+{{#unless success}}
+<h3>Submit an evaluation of a student:</h3>
+<form id="evalform" action="/review/{{reviewToken}}" method="POST">
+    <label for="evaluation">Evaluation:</label>
+    <textarea id="evaluation" name="evaluation" form="evalform"></textarea>
+    <input type="submit" value="Submit">
+</form>
+{{/unless}}
+
+{{#if success}}
+    <h3>Submitted evaluation successfully!</h3>
+{{/if}}
+
+{{/partial}}
+
+{{> base.hbs}}

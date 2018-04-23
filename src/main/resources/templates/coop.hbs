@@ -1,0 +1,42 @@
+{{! Single Co-op page }}
+{{#partial "body"}}
+
+<h3>Co-op at {{ coop.employer.name }} </h3>
+<p>Start date:  {{ coop.startDate }} </p>
+<p>End date: {{ coop.endDate }} </p>
+
+<h5>Work Report</h5>
+<p>
+    {{#coop.workReport}}{{coop.workReport}}{{/coop.workReport}}
+    {{^success}}{{^coop.workReport}}
+        <h5><a onclick="toggleHidden()" href="#">Submit a work report</a></h5>
+        <form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;">
+            <label for="review">Work report:</label>
+            <textarea id="review" name="review" form="reviewform"></textarea>
+            <input type="hidden" name="coopID" value={{coop.id}}>
+            <input type="submit" value="Submit">
+        </form>
+    {{/coop.workReport}}{{/success}}
+    {{#success}}<h5>Review submitted successfully.</h5>{{/success}}
+</p>
+
+<h5>Student Evaluation</h5>
+<p>
+    {{#coop.studentEvaluation}}{{coop.studentEvaluation}}{{/coop.studentEvaluation}}
+    {{^coop.studentEvaluation}}No student evaluation has been completed for this co-op.{{/coop.studentEvaluation}}
+</p>
+
+<script>
+    function toggleHidden() {
+        var form = document.getElementById("reportform");
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
+
+{{/partial}}
+
+{{> base.hbs}}
