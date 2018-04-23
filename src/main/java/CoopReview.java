@@ -35,6 +35,7 @@ import static spark.Spark.*;
 /**
  * Co-op Review Main class
  * Handles configuring and starting the web server
+ * and OAuth login using code from github/pconrad
  */
 public class CoopReview implements SparkApplication {
     /**
@@ -48,12 +49,10 @@ public class CoopReview implements SparkApplication {
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
+        gitHubOAuthSetup(templateEngine);
         frontEndPageRoutes(templateEngine);
         errorPageRoutes(templateEngine);
         internalAPIRoutes(db);
-        gitHubOAuthSetup(templateEngine);
-
-
     }
 
     private void gitHubOAuthSetup(HandlebarsTemplateEngine templateEngine) {
@@ -73,6 +72,12 @@ public class CoopReview implements SparkApplication {
         final SecurityFilter
                 githubFilter = new SecurityFilter(config, "GithubClient", "", "");
 
+        final org.pac4j.sparkjava.CallbackRoute callback =
+                new org.pac4j.sparkjava.CallbackRoute(config);
+
+        get("/callback", callback);
+        post("/callback", callback);
+
         get("/",
                 (request, response) -> new ModelAndView(buildModel(request,response),"login.hbs"),
                 templateEngine);
@@ -84,24 +89,6 @@ public class CoopReview implements SparkApplication {
                 templateEngine);
 
         get("/logout", new LogoutRoute(config, "/"));
-
-        get("/session",
-                (request, response) -> new ModelAndView(buildModel(request,response),
-                        "session.mustache"),
-                templateEngine);
-
-        get("/github",
-                (request, response) ->
-                        new ModelAndView(addGithub(buildModel(request,response),request,response),
-                                "github.mustache"),
-                templateEngine);
-
-        final org.pac4j.sparkjava.CallbackRoute callback =
-                new org.pac4j.sparkjava.CallbackRoute(config);
-
-        get("/callback", callback);
-        post("/callback", callback);
-
     }
 
     private void frontEndPageRoutes(HandlebarsTemplateEngine templateEngine) {
@@ -120,7 +107,7 @@ public class CoopReview implements SparkApplication {
             System.out.println("Received request: " + req.url());
         });
 
-        // Homepage (Login
+        /*// Homepage (Login
         get("/", (request, response) -> {
             return templateEngine.render(
                     new ModelAndView(null, "login.hbs")
@@ -134,7 +121,7 @@ public class CoopReview implements SparkApplication {
             }
             response.redirect("/student");
             return "";
-        }));
+        }));*/
 
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
