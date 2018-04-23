@@ -5,13 +5,16 @@
 
     <h1 class="top-bar">RIT Co-op Review</h1>
 
-    <form action="/" method="POST">
-        <label for="username">Username</label>
-        <input type="text" name="username">
-        <label for="password">Password</label>
-        <input type="password" name="password">
-        <input type="submit" value="Submit">
-    </form>
+    {{#unless session}}
+        {{#unless ghp}}
+            <h3><a href="/login">Login with GitHub</a></h3>
+        {{/unless}}
+    {{/unless}}
+    {{#if session}}
+        {{#if ghp}}
+            <script>window.location.replace("https://co-op-review.herokuapp.com/student")</script>
+        {{/if}}
+    {{/if}}
 
 {{/partial}}
 
