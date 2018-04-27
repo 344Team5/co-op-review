@@ -17,6 +17,7 @@ import org.pac4j.sparkjava.LogoutRoute;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.TemplateEngine;
 import spark.servlet.SparkApplication;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -35,7 +36,7 @@ import static spark.Spark.*;
 /**
  * Co-op Review Main class
  * Handles configuring and starting the web server
- * and OAuth login using code from github/pconrad
+ * and OAuth login using example code from github/pconrad
  */
 public class CoopReview implements SparkApplication {
     /**
@@ -49,29 +50,35 @@ public class CoopReview implements SparkApplication {
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        gitHubOAuthSetup(templateEngine);
+        SecurityFilter githubFilter = createSecurityFilter(templateEngine);
+        gitHubOAuthSetup(templateEngine, githubFilter);
         frontEndPageRoutes(templateEngine);
         errorPageRoutes(templateEngine);
-        internalAPIRoutes(db);
+        internalAPIRoutes(githubFilter);
     }
 
-    private void gitHubOAuthSetup(HandlebarsTemplateEngine templateEngine) {
+    private Config buildConfig(TemplateEngine templateEngine){
         HashMap<String,String> envVars =
                 getNeededEnvVars(new String []{ "GITHUB_CLIENT_ID",
                         "GITHUB_CLIENT_SECRET",
                         "GITHUB_CALLBACK_URL",
                         "APPLICATION_SALT"});
 
-        Config config = new
+        return new
                 OAuthConfigFactory(envVars.get("GITHUB_CLIENT_ID"),
                 envVars.get("GITHUB_CLIENT_SECRET"),
                 envVars.get("GITHUB_CALLBACK_URL"),
                 envVars.get("APPLICATION_SALT"),
                 templateEngine).build();
+    }
 
-        final SecurityFilter
-                githubFilter = new SecurityFilter(config, "GithubClient", "", "");
+    private SecurityFilter createSecurityFilter(TemplateEngine templateEngine) {
+        Config config = buildConfig(templateEngine);
+        return new SecurityFilter(config, "GithubClient", "", "");
+    }
 
+    private void gitHubOAuthSetup(TemplateEngine templateEngine, SecurityFilter githubFilter) {
+        Config config = buildConfig(templateEngine);
         final org.pac4j.sparkjava.CallbackRoute callback =
                 new org.pac4j.sparkjava.CallbackRoute(config);
 
@@ -265,9 +272,10 @@ public class CoopReview implements SparkApplication {
         });
     }
 
-    private void internalAPIRoutes(DatabaseApi dbAPI) {
+    private void internalAPIRoutes(SecurityFilter githubFilter) {
         /* API Routes */
         path("/api/v1", () -> {
+            before("/*", githubFilter);
             path("/students", () -> {
                 get("", StudentApi::getStudents); // get all students
                 post("", StudentApi::addStudent); // create a student
@@ -326,23 +334,7 @@ public class CoopReview implements SparkApplication {
         new CoopReview().init();
     }
 
-    /**
-     * Example for connecting to the database. Instantiates JDBC connection.
-     *
-     * Database URL is in the following format (values can be found in the credentials for our Heroku data store):
-     * jdbc:postgresql://<host>:<port>/<dbname>?user=<username>&password=<password>&sslmode=require
-     *
-     * System.getenv() should be able to get this from the Heroku app in production.
-     *
-     * The URL can be fetched by running "heroku run echo $JDBC_DATABASE_URL --app co-op-review"
-     * Note - a backslash should prepend the variable when running the command on Linux/Mac
-     *
-     * @return returns connection to the database
-     */
-    private static Connection getConnection() throws URISyntaxException, SQLException {
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        return DriverManager.getConnection(dbUrl);
-    }
+
 
     /**
      * Alternative way to get connection that involves using the database URL directly.

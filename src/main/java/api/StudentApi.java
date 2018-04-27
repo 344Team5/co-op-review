@@ -3,10 +3,12 @@ package api;
 import spark.Request;
 import spark.Response;
 
+import javax.xml.crypto.Data;
+
 public class StudentApi {
 
     public static Object getStudents(Request request, Response response) {
-        return "Get all Students";
+        return "";
     }
 
     public static Object addStudent(Request request, Response response) {

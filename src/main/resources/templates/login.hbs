@@ -5,15 +5,11 @@
 
     <h1 class="top-bar">RIT Co-op Review</h1>
 
-    {{#unless session}}
-        {{#unless ghp}}
-            <h3><a href="/login">Login with GitHub</a></h3>
-        {{/unless}}
+    {{#unless ghp}}
+        <h3><a href="/login">Login with GitHub</a></h3>
     {{/unless}}
-    {{#if session}}
-        {{#if ghp}}
+    {{#if ghp}}
             <script>window.location.replace("https://co-op-review.herokuapp.com/student")</script>
-        {{/if}}
     {{/if}}
 
 {{/partial}}
