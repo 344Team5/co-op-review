@@ -68,21 +68,30 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object patchStudent(Request request, Response response) {
-        //UPDATE users SET ...,...,.. WHERE uid =
         Object result = "";
-        Map<String,String> queryMap = getQueryParameters(request, null, new String[]{"uid","name"});
+        Map<String,String> queryMap = getQueryParameters(request, null,
+                new String[]{"name", "admin", "uid"});
         if (queryMap != null) {
-            if (queryMap.containsKey("name")) {
+            for (String attributeKey : queryMap.keySet()) {
                 Connection c = db();
                 PreparedStatement st = null;
                 if (c != null) {
                     try {
-                        st = db().prepareStatement("UPDATE users SET name = ? WHERE uid = ? AND admin = FALSE;");
-                        st.setString(1, queryMap.get("name"));
-                        st.setString(2, request.params().get(":sid"));
-                        boolean success = st.execute();
-                        //result = getSQLQueryResultsJson(rs, "uid", "name");
-                        response.type("application/json");
+                        // this looks bad and I should probably refactor it
+                        if (attributeKey.equals("name") || attributeKey.equals("uid")) {
+                            st = db().prepareStatement("UPDATE users SET " + attributeKey + " = ? WHERE uid = ?;");
+                        } else if (attributeKey.equals("admin")) {
+                            st = db().prepareStatement("UPDATE users SET "
+                                    + attributeKey + " = CAST(? AS boolean) WHERE uid = ?;");
+                        }
+                        if (st != null) {
+                            st.setString(1, queryMap.get(attributeKey));
+                            st.setString(2, request.params().get(":sid"));
+                            System.out.println(st);
+                            boolean success = st.execute();
+                            //result = getSQLQueryResultsJson(rs, "uid", "name");
+                            response.type("application/json");
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {

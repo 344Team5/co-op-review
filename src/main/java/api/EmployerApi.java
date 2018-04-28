@@ -68,7 +68,6 @@ public class EmployerApi extends DatabaseApi {
     }
 
     public static Object patchEmployer(Request request, Response response) {
-        //UPDATE users SET ...,...,.. WHERE uid =
         Object result = "";
         Map<String,String> queryMap = getQueryParameters(request, null,
                 new String[]{"reviews","name", "avg_salary", "id"});
@@ -81,7 +80,7 @@ public class EmployerApi extends DatabaseApi {
                         // this looks bad and I should probably refactor it
                         if (attributeKey.equals("name") || attributeKey.equals("id")) {
                             st = db().prepareStatement("UPDATE employers SET "
-                                    + attributeKey+ " = ? WHERE id = CAST(? AS INTEGER);");
+                                    + attributeKey + " = ? WHERE id = CAST(? AS INTEGER);");
                         } else if (attributeKey.equals("reviews")) {
 //                            // get current reviews and append new one to them
 //                            PreparedStatement tempSt = db().prepareStatement("SELECT reviews FROM employers where id = CAST(? AS INTEGER);");
@@ -91,10 +90,10 @@ public class EmployerApi extends DatabaseApi {
 //                            queryMap.put(attributeKey, reviews);
 
                             st = db().prepareStatement("UPDATE employers SET "
-                                    + attributeKey+ " = CAST(? AS text[]) WHERE id = CAST(? AS INTEGER);");
+                                    + attributeKey + " = CAST(? AS text[]) WHERE id = CAST(? AS INTEGER);");
                         } else if (attributeKey.equals("avg_salary")) {
                             st = db().prepareStatement("UPDATE employers SET "
-                                    + attributeKey+ " = CAST(? AS INTEGER) WHERE id = CAST(? AS INTEGER);");
+                                    + attributeKey + " = CAST(? AS INTEGER) WHERE id = CAST(? AS INTEGER);");
                         }
                         if (st != null) {
                             st.setString(1, queryMap.get(attributeKey));
