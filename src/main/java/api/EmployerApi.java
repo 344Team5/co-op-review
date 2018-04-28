@@ -3,10 +3,7 @@ package api;
 import spark.Request;
 import spark.Response;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class EmployerApi extends DatabaseApi {
 
@@ -36,22 +33,45 @@ public class EmployerApi extends DatabaseApi {
     }
 
     public static Object addEmployer(Request request, Response response) {
-        return "Add a Student";
+        return "Add an Employer";
     }
 
     public static Object getEmployer(Request request, Response response) {
-        return "Get a Student";
+        Object result = "";
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("SELECT * FROM employers WHERE id = CAST(? AS INTEGER);");
+                st.setString(1, request.params().get(":eid"));
+                System.out.println(st);
+                ResultSet rs = st.executeQuery();
+                result = getSQLQueryResultsJson(rs, "reviews", "name", "avg_salary", "id");
+                response.type("application/json");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object putEmployer(Request request, Response response) {
-        return "Create/Update a Student";
+        return "Create/Update an Employer";
     }
 
     public static Object patchEmployer(Request request, Response response) {
-        return "Modify a Student";
+        return "Modify an Employer";
     }
 
     public static Object deleteEmployer(Request request, Response response) {
-        return "Delete a Student";
+        return "Delete an Employer";
     }
 }
