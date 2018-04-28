@@ -34,7 +34,7 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object addStudent(Request request, Response response) {
-        return "Add a Student";
+        return "Add a Student"; // INSERT INTO users (uid, name) VALUES (...,...) <-must parse JSON
     }
 
     public static Object getStudent(Request request, Response response) {
@@ -64,14 +64,14 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object putStudent(Request request, Response response) {
-        return "Create/Update a Student";
+        return "Create/Update a Student"; //Implement this only if we need to
     }
 
     public static Object patchStudent(Request request, Response response) {
-        return "Modify a Student";
+        return "Modify a Student"; //UPDATE users SET ...,...,.. WHERE uid =
     }
 
     public static Object deleteStudent(Request request, Response response) {
-        return "Delete a Student";
+        return "Delete a Student"; //DELETE FROM users WHERE uid =
     }
 }
