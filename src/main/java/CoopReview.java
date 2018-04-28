@@ -203,7 +203,8 @@ public class CoopReview implements SparkApplication {
         });
 
         // All Employers page, unless given specific query in R2
-        get("/employers", (request, response) -> {
+        get("/employers/:eid", (request, response) -> {
+            /*
             if (request.queryParams().contains("id")) {
                 Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
@@ -218,14 +219,19 @@ public class CoopReview implements SparkApplication {
                         new ModelAndView(data, "employers.hbs")
                 );
             }
+            */
+            Map<String,Object> model = new HashMap<>();
+            model.put("eid",request.params(":eid"));
+            return templateEngine.render(new ModelAndView(model, "employer.hbs"));
         });
 
         // Handle POST from Employer Review form
-        post("/employers/review", (request, response) -> {
+        post("/employers/:eid/review", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("employerID"));
             //data.put("employer", db.getEmployerDao().get(id));
             data.put("success", true);
+            data.put("eid",request.params("eid"));
             return templateEngine.render(
                     new ModelAndView(data, "employer.hbs")
             );
