@@ -100,7 +100,7 @@ public class CoopReview implements SparkApplication {
 
     private void frontEndPageRoutes(TemplateEngine templateEngine) {
         before((req, res) -> { // redirect requests with trailing '/'
-            System.out.println("Received request: " + req.url());
+            System.out.println("Received request: " + req.requestMethod() + " " + req.url());
         });
 
         /*// Homepage (Login

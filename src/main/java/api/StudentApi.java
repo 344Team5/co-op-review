@@ -68,7 +68,36 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object patchStudent(Request request, Response response) {
-        return "Modify a Student"; //UPDATE users SET ...,...,.. WHERE uid =
+        //UPDATE users SET ...,...,.. WHERE uid =
+        Object result = "";
+        Map<String,String> queryMap = getQueryParameters(request, null, new String[]{"uid","name"});
+        if (queryMap != null) {
+            if (queryMap.containsKey("name")) {
+                Connection c = db();
+                PreparedStatement st = null;
+                if (c != null) {
+                    try {
+                        st = db().prepareStatement("UPDATE users SET name = ? WHERE uid = ? AND admin = FALSE;");
+                        st.setString(1, queryMap.get("name"));
+                        st.setString(2, request.params().get(":sid"));
+                        boolean success = st.execute();
+                        //result = getSQLQueryResultsJson(rs, "uid", "name");
+                        response.type("application/json");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (st != null) {
+                            try {
+                                st.close();
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object deleteStudent(Request request, Response response) {
