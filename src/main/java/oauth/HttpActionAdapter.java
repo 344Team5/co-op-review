@@ -1,3 +1,5 @@
+package oauth;
+
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.sparkjava.DefaultHttpActionAdapter;
 import org.pac4j.sparkjava.SparkWebContext;

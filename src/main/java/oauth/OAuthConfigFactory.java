@@ -1,3 +1,5 @@
+package oauth;
+
 import org.pac4j.core.client.Clients;
 import org.pac4j.oauth.client.GitHubClient;
 import spark.TemplateEngine;

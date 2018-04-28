@@ -1,14 +1,33 @@
 package api;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 import spark.Request;
 import spark.Response;
 
-import javax.xml.crypto.Data;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StudentApi {
+public class StudentApi extends DatabaseApi {
 
-    public static Object getStudents(Request request, Response response) {
-        return "";
+    public static Object getStudents(Request request, Response response) throws SQLException {
+        Object result = "";
+        Connection c = db();
+        Statement st = null;
+        if (c != null) {
+            try {
+                st = db().createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM users WHERE admin = FALSE;");
+                result = getQueryResultsJson(rs, "uid", "name");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) st.close();
+            }
+        }
+        return result;
     }
 
     public static Object addStudent(Request request, Response response) {
