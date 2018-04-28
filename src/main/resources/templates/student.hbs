@@ -1,0 +1,26 @@
+{{! "Homepage" for Student }}
+{{> signedin.hbs}}
+
+{{#partial "body"}}
+
+    <div class="container text-center">
+        <h3>Welcome, {{ student.name }} </h3>
+        <p>Select a Co-op:</p>
+        <ul>
+            {{#each coops}}
+                <li><a href="./student/coops?id={{id}}">Co-op at {{employer}}</a></li>
+            {{/each}}
+
+            {{#unless coops}}<li>No co-ops were found.</li>{{/unless}}
+        </ul>
+        <p>Need to add a new co-op?</p>
+        <p><a href="./student/coops/register/">Register a Co-op</a></p>
+
+{{> externalApiInfo.hbs }}
+
+    </div>
+
+{{/partial}}
+
+{{> base.hbs}}
+
