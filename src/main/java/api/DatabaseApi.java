@@ -2,13 +2,16 @@ package api;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import spark.Request;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 abstract class DatabaseApi {
     private static Connection dbConnection = null;
@@ -31,7 +34,7 @@ abstract class DatabaseApi {
         return null;
     }
 
-    static Object getQueryResultsJson(ResultSet rs, String ... keys) {
+    static Object getSQLQueryResultsJson(ResultSet rs, String ... keys) {
         Object results = "";
         List<JSONObject> rows = new ArrayList<>();
         try {
@@ -48,5 +51,29 @@ abstract class DatabaseApi {
             e.printStackTrace();
         }
         return results;
+    }
+
+    static Map<String,String> getQueryParameters(Request request, String[] requiredKeys, String[] optionalKeys) {
+        HashMap<String,String> queryMap = new HashMap<>();
+        if (requiredKeys != null) {
+            for (String k : requiredKeys) {
+                String v = request.queryParams(k);
+                if (v == null) {
+                    System.err.println("Missing required query parameter: " + k);
+                    return null;
+                } else {
+                    queryMap.put(k, v);
+                }
+            }
+        }
+        if (optionalKeys != null) {
+            for (String k : optionalKeys) {
+                String v = request.queryParams(k);
+                if (v != null) {
+                    queryMap.put(k, v);
+                }
+            }
+        }
+        return queryMap;
     }
 }

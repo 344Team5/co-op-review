@@ -1,18 +1,14 @@
 package api;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONStringer;
 import spark.Request;
 import spark.Response;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class StudentApi extends DatabaseApi {
 
-    public static Object getStudents(Request request, Response response) throws SQLException {
+    public static Object getStudents(Request request, Response response) {
         Object result = "";
         Connection c = db();
         Statement st = null;
@@ -20,11 +16,18 @@ public class StudentApi extends DatabaseApi {
             try {
                 st = db().createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM users WHERE admin = FALSE;");
-                result = getQueryResultsJson(rs, "uid", "name");
+                result = getSQLQueryResultsJson(rs, "uid", "name");
+                response.type("application/json");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (st != null) st.close();
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         return result;
@@ -35,7 +38,29 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object getStudent(Request request, Response response) {
-        return "Get a Student";
+        Object result = "";
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("SELECT * FROM users WHERE uid = ? AND admin = FALSE;");
+                st.setString(1, request.params().get(":sid"));
+                ResultSet rs = st.executeQuery();
+                result = getSQLQueryResultsJson(rs, "uid", "name");
+                response.type("application/json");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object putStudent(Request request, Response response) {
