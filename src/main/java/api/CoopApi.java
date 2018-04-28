@@ -3,7 +3,7 @@ package api;
 import spark.Request;
 import spark.Response;
 
-public class CoopApi {
+public class CoopApi extends DatabaseApi {
     public static Object getCoops(Request request, Response response) {
         return "Get all Students";
     }

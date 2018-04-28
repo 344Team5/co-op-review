@@ -3,10 +3,36 @@ package api;
 import spark.Request;
 import spark.Response;
 
-public class EmployerApi {
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class EmployerApi extends DatabaseApi {
 
     public static Object getEmployers(Request request, Response response) {
-        return "Get all Students";
+        Object result = "";
+        Connection c = db();
+        Statement st = null;
+        if (c != null) {
+            try {
+                st = db().createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM employers;");
+                result = getSQLQueryResultsJson(rs, "id", "name", "avg_salary", "reviews");
+                response.type("application/json");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object addEmployer(Request request, Response response) {
