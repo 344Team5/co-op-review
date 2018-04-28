@@ -1,4 +1,6 @@
 {{! Single Co-op page }}
+{{> signedin.hbs}}
+
 {{#partial "body"}}
 
 <h3>Co-op at {{ coop.employer.name }} </h3>
@@ -21,10 +23,12 @@
 </p>
 
 <h5>Student Evaluation</h5>
+<i><a href="#">Send this link to employer for evaluations</a></i>
 <p>
     {{#coop.studentEvaluation}}{{coop.studentEvaluation}}{{/coop.studentEvaluation}}
     {{^coop.studentEvaluation}}No student evaluation has been completed for this co-op.{{/coop.studentEvaluation}}
 </p>
+
 
 <script>
     function toggleHidden() {

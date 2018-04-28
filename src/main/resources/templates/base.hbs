@@ -1,25 +1,19 @@
 <html>
 {{#block "head"}}
     <head>
-        <title>RIT Co-op Review System</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#F36E21">
+        <title>RIT Co-op</title>
         <link rel="stylesheet" type="text/css" href="/css/foundation.min.css">
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         <script src="/js/vendor/jquery.js"></script>
         <script src="/js/app.js"></script>
     </head>
-
-    <body>
 {{/block}}
-
+    <body>
 {{#block "header"}}
-    <div class="title-bar">
-        <h1 class="title-bar-left">CO-OP PORTAL</h1>
-        <input type="search" class="title-bar-right" style="max-width: 50rem;" placeholder="Search for Employers...(in R2)">
-        <img src="/img/betty-prof.jpg" class="title-bar-right" style="border-radius: 50%;
-            max-width: 100px; height: auto; margin-left: 50px"/>
-        <h3 style="margin-left: 10px; margin-right: 30px">{{name}}</h3>
-        <a href="/logout"><button class="button">Log Out</button></a>
-    </div>
+
 {{/block}}
 
 {{#block "body"}}
@@ -27,6 +21,8 @@
 {{/block}}
 
 {{#block "footer"}}
+    <footer class="is-at-bottom">&copy; SWEN 344 - Pentigroup 2018</footer>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117964350-1"></script>
     <script>
@@ -37,6 +33,7 @@
         gtag('config', 'UA-117964350-1');
     </script>
 
-    </body>
 {{/block}}
+    </body>
+
 </html>
