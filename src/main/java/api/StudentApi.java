@@ -110,6 +110,26 @@ public class StudentApi extends DatabaseApi {
     }
 
     public static Object deleteStudent(Request request, Response response) {
-        return "Delete a Student"; //DELETE FROM users WHERE uid =
+        Object result = "";
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("DELETE FROM students WHERE uid = ?;");
+                st.setString(1, request.params().get(":sid"));
+                st.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

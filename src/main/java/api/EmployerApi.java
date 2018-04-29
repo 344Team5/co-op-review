@@ -122,6 +122,26 @@ public class EmployerApi extends DatabaseApi {
     }
 
     public static Object deleteEmployer(Request request, Response response) {
-        return "Delete an Employer";
+        Object result = "";
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("DELETE FROM employers WHERE id = CAST(? AS INTEGER);");
+                st.setString(1, request.params().get(":eid"));
+                st.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
