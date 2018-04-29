@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:4567/api/v1/employers",
+			"name": "getEmployers()",
 			"event": [
 				{
 					"listen": "test",
@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/employers/1",
+					"raw": "http://localhost:4567/api/v1/employers",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -41,8 +41,7 @@
 					"path": [
 						"api",
 						"v1",
-						"employers",
-						"1"
+						"employers"
 					]
 				},
 				"description": "Test getEmployers() in EmployerApi"
@@ -50,12 +49,12 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4567/api/v1/employers/1",
+			"name": "getEmployer()",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "2818c270-2d6f-4473-903d-97004dbfa885",
+						"id": "4f35f9fa-c1f5-4370-b1a1-7d5dfc56e215",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"response is ok\", function () {",
@@ -67,8 +66,9 @@
 							"   pm.response.to.be.json;",
 							"});",
 							"",
-							"pm.test(\"json tests\", function () {",
-							"   pm.expect(pm.response.json().results[0].id).to.equal(\"1\"); ",
+							"pm.test(\"test id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id).to.eql(\"1\");",
 							"});"
 						]
 					}
@@ -97,7 +97,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4567/api/v1/students",
+			"name": "getStudents()",
 			"event": [
 				{
 					"listen": "test",
@@ -140,12 +140,12 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4567/api/v1/students/1",
+			"name": "getStudent()",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "abf4124b-00c9-45cc-aa72-455b3a2386f0",
+						"id": "4121d466-7c01-4e82-a53b-7da2ffa88c2e",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"response is ok\", function () {",
@@ -156,7 +156,11 @@
 							"   pm.response.to.be.withBody;",
 							"   pm.response.to.be.json;",
 							"});",
-							""
+							"",
+							"pm.test(\"test uid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].uid).to.eql(\"tec3246\");",
+							"});"
 						]
 					}
 				}
@@ -166,7 +170,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/students",
+					"raw": "http://localhost:4567/api/v1/students/tec3246",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -175,7 +179,8 @@
 					"path": [
 						"api",
 						"v1",
-						"students"
+						"students",
+						"tec3246"
 					]
 				},
 				"description": "Test getStudent() in StudentApi"
@@ -183,7 +188,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4567/api/v1/coops",
+			"name": "getCoops()",
 			"event": [
 				{
 					"listen": "test",
@@ -226,7 +231,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4567/api/v1/coops/1",
+			"name": "getCoop()",
 			"event": [
 				{
 					"listen": "test",
