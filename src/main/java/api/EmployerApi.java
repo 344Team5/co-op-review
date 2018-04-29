@@ -33,8 +33,31 @@ public class EmployerApi extends DatabaseApi {
         return result;
     }
 
+    // currently just needs name and average salary
     public static Object addEmployer(Request request, Response response) {
-        return "Add an Employer";
+        Object result = "";
+        Map<String,String> dataMap = getAjaxData(request);
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("INSERT INTO employers (name, avg_salary) VALUES (?,CAST(? AS INTEGER));");
+                st.setString(1, dataMap.get("name"));
+                st.setString(2, dataMap.get("avg_salary"));
+                st.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object getEmployer(Request request, Response response) {

@@ -118,6 +118,26 @@ public class CoopApi extends DatabaseApi {
     }
 
     public static Object deleteCoop(Request request, Response response) {
-        return "Delete a Coop";
+        Object result = "";
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("DELETE FROM coops WHERE id = CAST(? AS INTEGER);");
+                st.setString(1, request.params().get(":cid"));
+                st.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

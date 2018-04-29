@@ -33,8 +33,33 @@ public class StudentApi extends DatabaseApi {
         return result;
     }
 
+    // TODO: figure out what to do for case where uid, name, and admin are not all provided
     public static Object addStudent(Request request, Response response) {
-        return "Add a Student"; // INSERT INTO users (uid, name) VALUES (...,...) <-must parse JSON
+        // INSERT INTO users (uid, name) VALUES (...,...) <-must parse JSON
+        Object result = "";
+        Map<String,String> dataMap = getAjaxData(request);
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("INSERT INTO users (uid, name, admin) VALUES (?,?,CAST(? AS boolean));");
+                st.setString(1, dataMap.get("uid"));
+                st.setString(2, dataMap.get("name"));
+                st.setString(3, dataMap.get("admin"));
+                st.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object getStudent(Request request, Response response) {
@@ -115,7 +140,7 @@ public class StudentApi extends DatabaseApi {
         PreparedStatement st = null;
         if (c != null) {
             try {
-                st = db().prepareStatement("DELETE FROM students WHERE uid = ?;");
+                st = db().prepareStatement("DELETE FROM users WHERE uid = ?;");
                 st.setString(1, request.params().get(":sid"));
                 st.execute();
             } catch (Exception e) {
