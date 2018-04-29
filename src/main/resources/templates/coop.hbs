@@ -4,15 +4,13 @@
 {{#partial "body"}}
     <div class="container">
 
-        <h3>Co-op at <span id="employerName"></span></h3>
-        <p>Start date: <span id="startDate"></span></p>
-        <p>End date: <span id="endDate"></span></p>
+        <h3>Co-op at <span id="employerName">...</span></h3>
+        <p>Start date: <span id="startDate">...</span></p>
+        <p>End date: <span id="endDate">...</span></p>
 
         <h5>Work Report</h5>
-
-        <div id="workReportDiv">
-
-            <h5><a id="formHider" onclick="toggleHidden()" href="#">Submit a work report</a></h5>
+        <div class="container" id="workReportDiv" style="width: 100%">
+            <p><a id="formHider" onclick="toggleHidden()" href="#">Submit a work report</a></p>
             <!--form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;"-->
             <div id="reportForm" class="hidden-item">
                 <label for="review">Work report:</label>
@@ -27,9 +25,11 @@
         </div>
 
         <h5>Student Evaluation</h5>
-        <a id="evalLink" href="#">Send this link to your manager at your co-op employer for evaluation.</a>
-
-        <p id="evalStatus"></p>
+        <div class="container" style="width: 100%">
+            <div id="eval">
+                <a id="evalLink" href="#">Send this link to your manager at your co-op employer for evaluation.</a>
+            </div>
+        </div>
 
     </div>
 

@@ -1,18 +1,29 @@
 {{! External Reviewer submit Student evaluation page }}
-{{> signedin.hbs}}
 
 {{#partial "body"}}
 
-<h3>Submit an evaluation of a student:</h3>
-<!-- AJAX to /api/v1/coops/{{ cid }}/eval/{{ token }} -->
-<!--form id="evalform"-->
-    <label for="evaluation">Evaluation:</label>
-    <textarea id="evaluation" name="evaluation" form="evalform"></textarea>
-    <input type="submit" value="Submit">
-<!--/form-->
+    <div class="container">
+        <h3>Evaluation of <span id="studentName">...</span></h3>
+        <!-- AJAX to /api/v1/coops/{{ cid }}/eval/{{ token }} -->
+        <form id="evalform" data-abide>
+            <label for="evaluation">Evaluation:</label>
+            <textarea required id="evaluation" name="evaluation" form="evalform"></textarea>
+            <button class="button hollow" type="submit" >Submit</button>
+        </form>
+    </div>
 
-<h3 style="display: none">Submitted evaluation successfully!</h3>
+    <h3 style="display: none">Submitted evaluation successfully!</h3>
 
+    <script>
+        $.get({
+            url: "/api/v1/coops/" + {{ cid }},
+            success: function(data) {
+                //console.log(data);
+                let coop = data[0];
+                setStudentName(getById("studentName"),coop.student_uid);
+            }
+        });
+    </script>
 {{/partial}}
 
 {{> base.hbs}}
