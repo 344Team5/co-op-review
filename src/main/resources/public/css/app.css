@@ -1,0 +1,29 @@
+.container {
+    width: 70%;
+    max-width: 1200px;
+    min-width: 380px;
+    margin: auto;
+    background-color: aliceblue;
+    border: 1px solid floralwhite;
+    padding: 30px;
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.55)
+    ), url("/img/campus.jpg") no-repeat fixed center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+footer {
+    text-align: center;
+    color: lightgrey;
+}

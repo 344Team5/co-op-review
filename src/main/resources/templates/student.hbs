@@ -3,18 +3,37 @@
 
 {{#partial "body"}}
 
-    <div class="container text-center">
-        <h3 id="greeting">Welcome</h3>
+    <div class="container">
+        <h2 id="greeting">Welcome</h2>
         <p>Select a Co-op:</p>
         <ul id="coops">
 
         </ul>
         <p>Need to add a new co-op?</p>
-        <p><a href="/coops/new/">Register a Co-op</a></p>
 
-{{!> externalApiInfo.hbs }}
 
     </div>
+
+    <div class="container">
+        <h4>Submit a new co-op:</h4>
+        <!-- AJAX POST to /api/v1/coops
+        <!--form id="coopform" action="/student/coops/register" method="POST"-->
+        <label for="employer">Employer:</label>
+        <input type="text" id="employer" name="employer">
+        <label for="startDate">Start date:</label>
+        <input type="date" id="startDate" name="startDate">
+        <label for="endDate">End date:</label>
+        <input type="date" id="endDate" name="endDate">
+        <button class="button hollow" >Submit</button>
+        <!--/form-->
+
+        <div>
+            <p id="status"></p>
+        </div>
+    </div>
+
+    {{!> externalApiInfo.hbs }}
+
     <script>var sid = "{{sid}}";</script>
     <script src="/js/student.js"></script>
 {{/partial}}

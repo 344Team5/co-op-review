@@ -25,7 +25,7 @@
             <p></p>
 
             <p>
-                Login to co-ops.rit.edu
+                Login to co-op system. This is a class project, NOT the real co-op system!!!
             </p>
 
             <div id="userInput">
@@ -44,11 +44,20 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-default" type="submit" name="_eventId_proceed" onclick="this.childNodes[0].nodeValue='Logging in, please wait...'">Log in</button>
+                    <div class="text-center">
+                        {{#unless ghp}}
+                            <h3><a href="/login">Login with GitHub</a></h3>
+                        {{/unless}}
+                        {{#if ghp}}
+                            <a href="/github">Go to GitHub info page</a>
+                        {{/if}}
+                    </div>
+
+                    <button class="button hollow large" type="submit" name="_eventId_proceed" onclick="this.childNodes[0].nodeValue='Logging in, please wait...'">Log in</button>
                 </form>
             </div>
             <br>
-            <p>Need assistance? Please contact <a href="#">Daniel Krutz</a></p>
+            <p>Need assistance? Please contact <a href="#">David Grzebinski (dwg7486 at rit dot edu)</a></p>
             <br>
         </div>
     </div>
@@ -57,12 +66,7 @@
         $('head').append(link);
     </script>
 
-    {{#unless ghp}}
-        <h3><a href="/login">Login with GitHub</a></h3>
-    {{/unless}}
-    {{#if ghp}}
-            <a href="/github">Go to GitHub info page</a>
-    {{/if}}
+
 
 {{/partial}}
 
