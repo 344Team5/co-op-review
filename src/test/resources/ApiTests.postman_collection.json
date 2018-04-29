@@ -32,12 +32,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/employers",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/employers",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
@@ -79,12 +80,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/employers/1",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/employers/1",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
@@ -123,12 +125,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/students",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/students",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
@@ -170,12 +173,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/students/tec3246",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/students/tec3246",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
@@ -214,12 +218,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/coops",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/coops",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
@@ -257,12 +262,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:4567/api/v1/coops/1",
-					"protocol": "http",
+					"raw": "https://co-op-review.herokuapp.com/api/v1/coops/1",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"co-op-review",
+						"herokuapp",
+						"com"
 					],
-					"port": "4567",
 					"path": [
 						"api",
 						"v1",
