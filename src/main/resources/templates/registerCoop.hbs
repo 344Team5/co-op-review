@@ -3,9 +3,10 @@
 
 {{#partial "body"}}
 
-{{#unless success}}
+
 <h3>Submit a new co-op:</h3>
-<form id="coopform" action="/student/coops/register" method="POST">
+<!-- AJAX POST to /api/v1/coops
+<!--form id="coopform" action="/student/coops/register" method="POST"-->
     <label for="employer">Employer:</label>
     <input type="text" id="employer" name="employer">
     <label for="startDate">Start date:</label>
@@ -13,13 +14,13 @@
     <label for="endDate">End date:</label>
     <input type="date" id="endDate" name="endDate">
     <input type="submit" value="Submit">
-</form>
-{{/unless}}
+<!--/form-->
 
-{{#if success}}
+<div style="display:none;">
     <h3>Submitted new co-op successfully!</h3>
     <a href="/student/">Back to student home</a>
-{{/if}}
+</div>
+
 
 
 {{/partial}}

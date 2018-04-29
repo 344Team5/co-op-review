@@ -140,4 +140,8 @@ public class CoopApi extends DatabaseApi {
         }
         return result;
     }
+
+    public static Object handleStudentEval(Request request, Response response) {
+        return null;
+    }
 }

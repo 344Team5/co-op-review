@@ -127,12 +127,12 @@ public class CoopReview implements SparkApplication {
             model.put("jobs", jobList);
 
             return templateEngine.render(
-                    new ModelAndView(model, "studentHome.hbs")
+                    new ModelAndView(model, "student.hbs")
             );
         }));
 
         // Form to register a new Coop
-        get("/student/coops/register", (request, response) -> {
+        get("/coops/new/", (request, response) -> {
             return templateEngine.render(
                     new ModelAndView(null, "registerCoop.hbs")
             );
@@ -168,12 +168,13 @@ public class CoopReview implements SparkApplication {
         }));
 
         // Form for External Reviewer to submit a StudentEvaluation
-        get("/review/:token", ((request, response) -> { // external reviewer completing student eval
+        get("/coops/:cid/eval/:token", ((request, response) -> { // external reviewer completing student eval
             Map<String, Object> model = new HashMap<>();
             //validate token?
-            model.put("token",request.params(":token"));
+            model.put("cid", request.params(":cid"));
+            model.put("token", request.params(":token"));
             return templateEngine.render(
-                    new ModelAndView(null, "evaluateStudent.hbs")
+                    new ModelAndView(model, "evaluateStudent.hbs")
             );
         }));
 
@@ -283,6 +284,8 @@ public class CoopReview implements SparkApplication {
                     //put("", CoopApi::putCoop); // update/replace
                     patch("", CoopApi::patchCoop); // update/modify
                     delete("", CoopApi::deleteCoop); // delete
+
+                    post("/eval/:token", CoopApi::handleStudentEval);
                 });
             });
         });
