@@ -87,10 +87,6 @@ public class CoopReview implements SparkApplication {
         get("/logout", new LogoutRoute(config, "/"));
 
         /* ------------------ */
-        get("/session",
-                (request, response) ->
-                        new ModelAndView(buildModel(request,response), "session.hbs"), templateEngine);
-
         get("/github",
                 (request, response) ->
                         new ModelAndView(addGithub(buildModel(request,response),request,response),
@@ -192,7 +188,7 @@ public class CoopReview implements SparkApplication {
         // All Employers page
         get("/employers", (request, response) -> {
             Map<String,Object> model = new HashMap<>();
-            return templateEngine.render(new ModelAndView(model, "employer.hbs"));
+            return templateEngine.render(new ModelAndView(model, "employers.hbs"));
         });
 
         // Employer page

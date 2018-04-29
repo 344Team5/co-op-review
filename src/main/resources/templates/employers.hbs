@@ -2,13 +2,34 @@
 {{> signedin.hbs}}
 
 {{#partial "body"}}
+    <div class="container">
+    <h3>Employers</h3>
+    <ul id="employers">
 
-<h3>Employers</h3>
-<ul>
-    {{#each employers}}
-        <li><a href="/employers?id={{id}}">{{name}}</a></li>
-    {{/each}}
-</ul>
+    </ul>
+    </div>
+    <script>
+        function updateEmployerList() {
+            $.get({
+                url: "/api/v1/employers",
+                success: function(data) {
+                    getById("employers").innerHTML = "";
+                    //console.log(data);
+                    $.each(data, function(i, emp) {
+                        //console.log(emp);
+                        let li = document.createElement("li");
+                        let a = document.createElement("a");
+                        a.href = "/employers/" + emp.id;
+                        a.innerHTML = emp.name;
+                        li.append(a);
+                        getById("employers").append(li);
+                    });
+                }
+            });
+        }
+
+        updateEmployerList();
+    </script>
 
 {{/partial}}
 
