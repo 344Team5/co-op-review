@@ -260,6 +260,8 @@ public class CoopReview implements SparkApplication {
                     //put("", StudentApi::putStudent); // update/replace
                     patch("", StudentApi::patchStudent); // update/modify
                     delete("", StudentApi::deleteStudent); // delete
+
+                    get("/coops", StudentApi::getCoops); // get student with their co-ops
                 });
 
             });
@@ -285,7 +287,7 @@ public class CoopReview implements SparkApplication {
                     patch("", CoopApi::patchCoop); // update/modify
                     delete("", CoopApi::deleteCoop); // delete
 
-                    post("/eval/:token", CoopApi::handleStudentEval);
+                    post("/eval/:token", CoopApi::handleStudentEval); // handle student evaluation form
                 });
             });
         });
