@@ -89,8 +89,7 @@ public class CoopReview implements SparkApplication {
         /* ------------------ */
         get("/github",
                 (request, response) ->
-                        new ModelAndView(addGithub(buildModel(request,response),request,response),
-                                "github.hbs"), templateEngine);
+                        new ModelAndView(buildModel(request,response), "github.hbs"), templateEngine);
         /* ------------------ */
     }
 
@@ -114,12 +113,12 @@ public class CoopReview implements SparkApplication {
 
             // Get jobs from the GitHub jobs API
             List<Map<String, Object>> jobList = new ArrayList<>();
-           /* for (JSONObject o : new ExternalApiRequest().getResults()) {
+            for (JSONObject o : new ExternalApiRequest().getResults()) {
                 String companyName = o.getString("company");
                 if (companyName != null) {
                     jobList.add(o.toMap());
                 }
-            }*/
+            }
             model.put("jobs", jobList);
 
             return templateEngine.render(
@@ -214,13 +213,29 @@ public class CoopReview implements SparkApplication {
 
         // Admin control main page
         get("/admin", (request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            //data.put("coops", db.getCoopDao().getAll());
-            //data.put("employers", db.getEmployerDao().getAll());
-            return templateEngine.render(
-                    new ModelAndView(data, "admin.hbs")
-            );
+            Map<String, Object> data = buildModel(request,response);
+            String userid = data.get("userid").toString();
+            boolean canAccess = StudentApi.isAdmin(userid);
+            if (canAccess) {
+                return templateEngine.render(
+                        new ModelAndView(data, "admin.hbs")
+                );
+            } else {
+                return genericErrorPage(response,
+                        "401: You're not allowed to go there!",
+                        401,
+                        templateEngine);
+            }
         });
+    }
+
+    private Object genericErrorPage(Response response, String message, int statusCode, TemplateEngine templateEngine) {
+        Map<String, Object> data = new HashMap<>();
+        response.status(statusCode);
+        data.put("message", message);
+        return templateEngine.render(
+                new ModelAndView(data, "error.hbs")
+        );
     }
 
     private void errorPageRoutes(TemplateEngine templateEngine) {
@@ -302,35 +317,16 @@ public class CoopReview implements SparkApplication {
         return port;
     }
 
-    private static java.util.List<CommonProfile> getProfiles(final Request request,
+    private static List<CommonProfile> getProfiles(final Request request,
                                                              final Response response) {
         final SparkWebContext context = new SparkWebContext(request, response);
         final ProfileManager manager = new ProfileManager(context);
         return manager.getAll(true);
     }
 
-    /**
-     add github information to the session
-     */
-    private static Map addGithub(Map model, Request request, Response response) {
-        GitHubProfile ghp = ((GitHubProfile)(model.get("ghp")));
-        if (ghp == null) {
-            System.out.println("No github profile");
-            return model;
-        }
-        try {
-            String accessToken = ghp.getAccessToken();
-            GitHub gh = null;
-            gh =  GitHub.connect( model.get("userid").toString(), accessToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return model;
-    }
+    private static Map<String,Object> buildModel(Request request, Response response) {
 
-    private static Map buildModel(Request request, Response response) {
-
-        final Map model = new HashMap<String,Object>();
+        final Map<String,Object> model = new HashMap<>();
 
         Map<String, Object> map = new HashMap<String, Object>();
         for (String k: request.session().attributes()) {
@@ -342,7 +338,7 @@ public class CoopReview implements SparkApplication {
 
         java.util.List<CommonProfile> userProfiles = getProfiles(request,response);
 
-        map.put("profiles", userProfiles);
+        //map.put("profiles", userProfiles);
 
         try {
             if (userProfiles.size()>0) {

@@ -196,4 +196,22 @@ public class StudentApi extends DatabaseApi {
 
         return result;
     }
+
+    public static boolean isAdmin(String uid) {
+        Boolean result = false;
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("SELECT (admin) FROM users WHERE uid = ?");
+                st.setString(1,uid);
+                ResultSet rs = st.executeQuery();
+                rs.next();
+                result = rs.getBoolean(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }
