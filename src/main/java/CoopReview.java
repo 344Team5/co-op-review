@@ -114,16 +114,16 @@ public class CoopReview implements SparkApplication {
 
         get("/students/:sid", ((request, response) -> { // "logged in" page
             Map<String, Object> model = new HashMap<>();
-            model.put("sid", request.params(":eid"));
+            model.put("sid", request.params(":sid"));
 
             // Get jobs from the GitHub jobs API
             List<Map<String, Object>> jobList = new ArrayList<>();
-            for (JSONObject o : new ExternalApiRequest().getResults()) {
+           /* for (JSONObject o : new ExternalApiRequest().getResults()) {
                 String companyName = o.getString("company");
                 if (companyName != null) {
                     jobList.add(o.toMap());
                 }
-            }
+            }*/
             model.put("jobs", jobList);
 
             return templateEngine.render(

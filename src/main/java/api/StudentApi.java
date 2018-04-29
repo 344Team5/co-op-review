@@ -177,6 +177,7 @@ public class StudentApi extends DatabaseApi {
                     ResultSet rs = st.executeQuery();
                     resultJson.put("coops", getSQLQueryResultsJson(rs, "id", "start_date", "end_date", "work_report",
                             "student_eval", "eval_token", "employer_id"));
+
                     result = resultJson;
                     response.type("application/json");
                 } catch (Exception e) {
