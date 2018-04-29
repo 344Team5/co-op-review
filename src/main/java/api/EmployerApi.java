@@ -69,10 +69,10 @@ public class EmployerApi extends DatabaseApi {
 
     public static Object patchEmployer(Request request, Response response) {
         Object result = "";
-        Map<String,String> queryMap = getQueryParameters(request, null,
-                new String[]{"reviews","name", "avg_salary", "id"});
-        if (queryMap != null) {
-            for (String attributeKey : queryMap.keySet()) {
+        Map<String,String> dataMap = getAjaxData(request);
+
+        if (dataMap != null) {
+            for (String attributeKey : dataMap.keySet()) {
                 Connection c = db();
                 PreparedStatement st = null;
                 if (c != null) {
@@ -96,9 +96,9 @@ public class EmployerApi extends DatabaseApi {
                                     + attributeKey + " = CAST(? AS INTEGER) WHERE id = CAST(? AS INTEGER);");
                         }
                         if (st != null) {
-                            st.setString(1, queryMap.get(attributeKey));
+                            st.setString(1, dataMap.get(attributeKey));
                             st.setString(2, request.params().get(":eid"));
-                            System.out.println(st);
+                            //System.out.println(st);
                             boolean success = st.execute();
                             //result = getSQLQueryResultsJson(rs, "uid", "name");
                             response.type("application/json");
@@ -117,6 +117,7 @@ public class EmployerApi extends DatabaseApi {
                 }
             }
         }
+
         return result;
     }
 

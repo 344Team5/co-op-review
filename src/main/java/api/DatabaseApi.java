@@ -53,6 +53,18 @@ abstract class DatabaseApi {
         return results;
     }
 
+    // TODO: add required/option keys functionality
+    static Map<String,String> getAjaxData(Request request) {
+        String requestBody = request.body();
+        String[] pairs = requestBody.split("&");
+        HashMap<String,String> dataMap = new HashMap<>();
+        for(String pair : pairs) {
+            String[] temp = pair.split("=");
+            dataMap.put(temp[0],temp[1]);
+        }
+        return dataMap;
+    }
+
     static Map<String,String> getQueryParameters(Request request, String[] requiredKeys, String[] optionalKeys) {
         HashMap<String,String> queryMap = new HashMap<>();
         if (requiredKeys != null) {
