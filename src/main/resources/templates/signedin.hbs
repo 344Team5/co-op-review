@@ -3,11 +3,11 @@
     <div class="title-bar">
         <img src="/img/rit-tiger-trans.png" alt="rit tiger logo" class="title-bar-left" style="max-width: 150px; margin-right: 15px;">
         <h1 class="title-bar-title"><a href="#">RIT CO-OP PORTAL</a></h1>
-        <input type="search" class="title-bar-right" style="max-width: 50rem;" placeholder="Search for Employers...(in R2)">
-        <img id="prof-icon" src="" class="title-bar-right" style="border-radius: 50%;
-                max-width: 100px; height: auto; margin-left: 50px" alt="profile icon"/>
-        <h3 id="prof-name" style="margin-left: 10px; margin-right: 30px">{{ student.name }}</h3>
-        <a href="/"><button class="button">Log Out</button></a>
+        <div id="userProfile">
+            <img id="profileIcon" src="" class="title-bar-right" alt="profile icon"/>
+            <h3 id="profileName">{{ student.name }}</h3>
+            <a href="/"><button class="button">Log Out</button></a>
+        </div>
     </div>
 
 {{/partial}}
