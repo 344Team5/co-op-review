@@ -18,7 +18,7 @@
         <div id="coopForm" class="hidden-item">
             <h4>Submit a new co-op:</h4>
             <!-- AJAX POST to /api/v1/coops -->
-            <form data-abide>
+            <form id="form" action="/api/v1/coops" method="POST" data-abide>
                 <label for="employer">Employer:</label>
                 <select required id="employer" name="employer">
 
@@ -36,6 +36,7 @@
 
             <div>
                 <p id="status"></p>
+                <button class="button hollow" onclick="toggleHidden()">Close</button>
             </div>
         </div>
     </div>
