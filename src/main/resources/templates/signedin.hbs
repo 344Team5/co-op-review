@@ -2,12 +2,12 @@
 
     <div id="title-bar" class="title-bar" onclick="toggleMenu()">
         <img id="title-tiger" class="title-bar-left" src="/img/rit-tiger-trans.png" alt="rit tiger logo">
-        <img id="menu-icon" src="/img/menu.png">
+        <img id="menu-icon" class="title-bar-left" src="/img/menu.png">
         <h1 class="title-bar-title"><a href="#">RIT CO-OP PORTAL</a></h1>
         {{#if ghp}}
-            <div id="userProfile">
+            <div id="userProfile" class="container">
                 <img id="profileIcon" src="{{ avatar_url }}" class="title-bar-right" alt="avatar"/>
-                <h3 id="profileName">{{ name }}</h3>
+                <h2 id="profileName">{{ name }}</h2>
                 <a href="/">
                     <button class="button">Log Out</button>
                 </a>
