@@ -1,5 +1,6 @@
 package api;
 
+import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 
@@ -36,20 +37,16 @@ public class CoopApi extends DatabaseApi {
 
     public static Object addCoop(Request request, Response response) {
         Object result = "";
-        Map<String,String> dataMap = new HashMap<>();
-        dataMap.put("start_date", "2017-09-12");
-        dataMap.put("end_date", "2018-1-12");
-        dataMap.put("student_uid", "dwg7486");
-        dataMap.put("employer_id", "1");
+        JSONObject data = new JSONObject(request.body());
         Connection c = db();
         PreparedStatement st = null;
         if (c != null) {
             try {
                 st = db().prepareStatement("INSERT INTO coops (start_date, end_date, student_uid, employer_id) VALUES (?,?,?,?);");
-                st.setDate(1, Date.valueOf(dataMap.get("start_date")));
-                st.setDate(2, Date.valueOf(dataMap.get("end_date")));
-                st.setString(3, dataMap.get("student_uid"));
-                st.setInt(4, Integer.parseInt(dataMap.get("employer_id")));
+                st.setDate(1, Date.valueOf(data.getString("start_date")));
+                st.setDate(2, Date.valueOf(data.getString("end_date")));
+                st.setString(3, data.getString("student_uid"));
+                st.setInt(4, data.getInt("employer_id"));
                 st.execute();
                 result = "success";
             } catch (Exception e) {
