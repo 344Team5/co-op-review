@@ -1,4 +1,5 @@
 updateStudentInfo();
+updateEmployerList();
 
 function updateStudentInfo() {
     $.get({
@@ -12,8 +13,7 @@ function updateStudentInfo() {
                     let li = document.createElement("li");
                     let a = document.createElement("a");
                     let span = document.createElement("span");
-                    span.id
-                    setEmployerName(getById("employerName"), coop.employer_id);
+                    setEmployerName(span, coop.employer_id);
                     a.href = "/coops/" + coop.id;
                     a.innerHTML = "Co-op at " ;
                     a.append(span);
@@ -25,12 +25,30 @@ function updateStudentInfo() {
     });
 }
 
+function updateEmployerList() {
+    $.get({
+        url: "/api/v1/employers",
+        success: function(data) {
+            getById("employer").innerHTML = "";
+            //console.log(data);
+            $.each(data, function(i, emp) {
+                //console.log(emp);
+                let opt = document.createElement("option");
+                opt.value = emp.id;
+                opt.innerHTML = emp.name;
+                getById("employer").append(opt);
+            });
+        }
+    });
+}
+
 function submitForm() {
     let data = {};
     data.start_date = getById("startDate").value;
     data.end_date = getById("startDate").value;
-    data.employer_id = 1;
+    data.employer_id = getById("employer").value;
     data.student_uid = sid;
+    console.log(data);
     $.post({
         url: "/api/v1/coops",
         data: JSON.stringify(data),
@@ -39,6 +57,7 @@ function submitForm() {
             if (data === "success") {
                 getById("status").innerHTML = "Co-op submitted successfully."
                 getById("status").style.color = "green";
+                updateStudentInfo();
             } else {
                 getById("status").innerHTML = "Something went wrong."
                 getById("status").style.color = "red";

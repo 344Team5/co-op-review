@@ -18,7 +18,7 @@
         <div id="coopForm" class="hidden-item">
             <h4>Submit a new co-op:</h4>
             <!-- AJAX POST to /api/v1/coops -->
-            <form id="form" action="/api/v1/coops" method="POST" data-abide>
+            <form id="form" onsubmit="return false" data-abide>
                 <label for="employer">Employer:</label>
                 <select required id="employer" name="employer">
 
@@ -27,7 +27,7 @@
                 <input required type="date" id="startDate" name="startDate">
                 <label for="endDate">End date:</label>
                 <input required type="date" id="endDate" name="endDate">
-                <button class="button hollow" type="submit">Submit</button>
+                <button class="button hollow" type="submit" onclick="submitForm()">Submit</button>
             </form>
 
             <p style="font-style:italic">
