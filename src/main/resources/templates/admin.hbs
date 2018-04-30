@@ -1,0 +1,30 @@
+{{! Admin control page }}
+{{> signedin.hbs}}
+
+{{#partial "body"}}
+
+    <div class="container">
+        <h3>Students</h3>
+        <p>Access student records.</p>
+        <ul id="students">
+
+        </ul>
+
+        <h3>Co-ops</h3>
+        <p>Access student evaluation and work report records by co-op.</p>
+        <ul id="coops">
+
+        </ul>
+
+        <h3>Employers</h3>
+        <p>Access to employer records.</p>
+        <ul id="employers">
+
+        </ul>
+
+        <script src="/js/admin.js"></script>
+    </div>
+
+{{/partial}}
+
+{{> base.hbs}}

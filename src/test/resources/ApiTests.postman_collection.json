@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "9da30820-986f-4049-b485-ebc8398e4a12",
+		"name": "ApiTests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getEmployers()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2e55e6e-60fb-4d2b-8292-b11ef8e1010d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/employers",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employers"
+					]
+				},
+				"description": "Test getEmployers() in EmployerApi"
+			},
+			"response": []
+		},
+		{
+			"name": "getEmployer()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4f35f9fa-c1f5-4370-b1a1-7d5dfc56e215",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"test id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id).to.eql(\"1\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/employers/1",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employers",
+						"1"
+					]
+				},
+				"description": "Test getEmployer() in EmployerApi"
+			},
+			"response": []
+		},
+		{
+			"name": "getStudents()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5a950766-9348-408c-b03f-5af27e14f510",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/students",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"students"
+					]
+				},
+				"description": "Test getStudents() in StudentApi"
+			},
+			"response": []
+		},
+		{
+			"name": "getStudent()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4121d466-7c01-4e82-a53b-7da2ffa88c2e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"test uid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].uid).to.eql(\"tec3246\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/students/tec3246",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"students",
+						"tec3246"
+					]
+				},
+				"description": "Test getStudent() in StudentApi"
+			},
+			"response": []
+		},
+		{
+			"name": "getCoops()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab994469-6d06-4eb1-9324-769fef62de8e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/coops",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"coops"
+					]
+				},
+				"description": "Test getCoops() in CoopApi"
+			},
+			"response": []
+		},
+		{
+			"name": "getCoop()",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "669a9d74-ea0b-49a0-9776-f1a56033d5d6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response has json content\", function () {",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://co-op-review.herokuapp.com/api/v1/coops/1",
+					"protocol": "https",
+					"host": [
+						"co-op-review",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"coops",
+						"1"
+					]
+				},
+				"description": "Test getCoop() in CoopApi"
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,28 @@
+{{! New Co-op Registration page }}
+{{> signedin.hbs}}
+
+{{#partial "body"}}
+
+<h3>Submit a new co-op:</h3>
+<!-- AJAX POST to /api/v1/coops
+<!--form id="coopform" action="/student/coops/register" method="POST"-->
+    <label for="employer">Employer:</label>
+    <input type="text" id="employer" name="employer">
+    <label for="startDate">Start date:</label>
+    <input type="date" id="startDate" name="startDate">
+    <label for="endDate">End date:</label>
+    <input type="date" id="endDate" name="endDate">
+    <input type="submit" value="Submit">
+<!--/form-->
+
+<div style="display:none;">
+    <h3>Submitted new co-op successfully!</h3>
+</div>
+
+
+
+{{/partial}}
+
+{{> base.hbs}}
+
+{{> signedin.hbs}}

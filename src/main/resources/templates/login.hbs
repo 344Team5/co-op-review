@@ -1,0 +1,49 @@
+{{! Login page }}
+{{#partial "body"}}
+    {{> signedin.hbs }}
+
+    <div class="container">
+
+        <div class="well" align="center">
+
+            <h2>RIT CO-OP Login</h2>
+            <p></p>
+
+            <p>
+                Login to co-op system. This is a class project, NOT the real co-op system!!!
+            </p>
+
+            <div id="userInput">
+                    <div class="text-center">
+                        {{#unless ghp}}
+                            <a href="/login"><button class="button hollow large">Login with GitHub</button></a>
+                        {{/unless}}
+                        {{#if ghp}}
+                            <a href="/github">Go to GitHub info page</a>
+                        {{/if}}
+                    </div>
+            </div>
+            <br>
+            <p>Need assistance? <a href="https://github.com/344Team5/co-op-review/issues">Please open an issue on our Github</a></p>
+            <br>
+        </div>
+    </div>
+    <script>
+        var link = $("<link />",{ rel: "stylesheet", type: "text/css", href: "/css/ritsignin.css" });
+        $('head').append(link);
+
+        {{#if ghp}}
+            {{#if admin}}
+                window.location.replace("/admin");
+            {{/if}}
+            {{#unless admin}}
+                window.location.replace("/students/{{userid}}");
+            {{/unless}}
+        {{/if}}
+    </script>
+
+
+
+{{/partial}}
+
+{{> base.hbs}}

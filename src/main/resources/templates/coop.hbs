@@ -1,0 +1,48 @@
+{{! Single Co-op page }}
+{{> signedin.hbs}}
+
+{{#partial "body"}}
+    <div class="container">
+
+        <h3><span id="studentName">...</span>'s Co-op at <span id="employerName">...</span></h3>
+        <p>Start date: <span id="startDate">...</span></p>
+        <p>End date: <span id="endDate">...</span></p>
+
+        <h5>Work Report</h5>
+        <div class="container" id="workReportDiv" style="width: 100%">
+            <p><a id="formHider" onclick="toggleHidden()" href="#">Submit a work report</a></p>
+            <!--form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;"-->
+            <form id="reportForm" onsubmit="return false" class="hidden-item" data-abide>
+                <label for="report">Work report:</label>
+                <textarea required id="report" name="report" form="reportform"></textarea>
+                <input id="coopIDInput" type="hidden" name="coopID" value="{{ cid }}">
+                <button type="submit" class="button hollow" onclick="submitForm()">Submit</button>
+                <h5 id="status"></h5>
+                <button type="button" onclick="toggleHidden()" class="button hollow">Close</button>
+            </form>
+            <!--/form-->
+        </div>
+
+        <h5>Student Evaluation</h5>
+        <div class="container" style="width: 100%">
+            <div id="eval">
+                <a id="evalLink" href="#">Send this link to your manager at your co-op employer for evaluation.</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleHidden() {
+            getById("reportForm").classList.toggle("hidden-item");
+            getById("formHider").classList.toggle("hidden-item");
+        }
+
+        var cid = "{{ cid }}";
+    </script>
+
+    <script src="/js/coop.js"></script>
+
+{{/partial}}
+
+{{> base.hbs}}

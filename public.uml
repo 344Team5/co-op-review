@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>fd2a4814-2c01-4562-ad2f-ce71962dc223.SCHEMA:d3qd2c89etbdbh.public</OriginalElement>
+  <nodes>
+    <node x="-84.44444444444446" y="479.66666666666663">fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.employers</node>
+    <node x="74.5" y="168.0">fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.coops</node>
+    <node x="252.33333333333337" y="483.7222222222224">fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.users</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.coops" target="fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.employers">
+      <point x="-40.25" y="-103.0" />
+      <point x="112.32894736842104" y="399.2631578947369" />
+      <point x="-7.944444444444457" y="443.33333333333337" />
+      <point x="0.0" y="59.0" />
+    </edge>
+    <edge source="fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.coops" target="fd2a4814-2c01-4562-ad2f-ce71962dc223.TABLE:d3qd2c89etbdbh.public.users">
+      <point x="40.25" y="-103.0" />
+      <point x="190.80555555555554" y="398.55555555555554" />
+      <point x="317.7222222222223" y="446.33333333333337" />
+      <point x="0.0" y="47.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8999999999999997" x="82.11111111111126" y="481.0000000000002" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+

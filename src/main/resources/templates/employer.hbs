@@ -1,0 +1,40 @@
+{{! Page for one employer }}
+{{> signedin.hbs}}
+
+{{#partial "body"}}
+
+    <div class="container">
+        <h1 id="employerName"></h1>
+        <!-- Add description, website, address? -->
+        <hr/>
+        <h3>Reviews</h3>
+        <ul id="employerReviews">
+
+        </ul>
+        <div id="employerReviewDiv">
+            <h5><a id="formHider" onclick="toggleHidden()" href="#">Leave a review</a></h5>
+            <!--form id="reviewform" action="/employers/review" method="POST" style="display: none;"-->
+            <div id="reviewForm" class="hidden-item">
+                <label for="review">Review:</label>
+                <textarea id="review" name="review" form="reviewform"></textarea>
+                <input id="employerIDinput" type="hidden" name="employerID" value={{ eid }}>
+                <button class="button hollow">Submit</button>
+            </div>
+        </div>
+        <!--/form-->
+
+        <h5 id="reviewStatus"></h5>
+    </div>
+
+    <script>
+        function toggleHidden() {
+            getById("reviewForm").classList.toggle("hidden-item");
+            getById("formHider").classList.toggle("hidden-item");
+        }
+
+        var eid = {{ eid }};
+    </script>
+
+{{/partial}}
+
+{{> base.hbs}}
