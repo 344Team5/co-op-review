@@ -137,26 +137,6 @@ public class CoopReview implements SparkApplication {
             );
         });
 
-        /*
-        // POST now handled by API
-        post("/student/coops/register", ((request, response) -> { // this will be login in R2
-            Map<String, Object> data = new HashMap<>();
-            data.put("success", true);
-            response.redirect("/student");
-            return "";
-        }));
-
-
-        // POST now handled by API
-        post("/student/coops/workreport", (request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            int id = Integer.parseInt(request.queryParams("coopID"));
-            //data.put("coop", db.getCoopDao().get(id));
-            data.put("success", true);
-            response.redirect("/student/coops?id=" + id);
-            return "";
-        });
-        */
         // Specific Co-op page
         get("/coops/:cid", ((request, response) -> {
             Map<String, Object> model = buildModel(request,response);

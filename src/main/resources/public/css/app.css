@@ -64,8 +64,6 @@ footer {
 
 #title-tiger {
     max-width: 100px;
-    position: absolute;
-    left: 20px;
 }
 
 #title-bar {
@@ -76,14 +74,15 @@ footer {
     width: 60px;
 }
 
-@media screen and (min-width: 0px) and (max-width: 730px) {
+@media screen and (min-width: 0px) and (max-width: 900px) {
     #title-tiger { display: none; }
     #userProfile { display: none; }
-    #menu-icon { display: inline; }
+
     .title-bar-title { margin: auto; }
 }
-@media screen and (min-width: 731px) {
+@media screen and (min-width: 901px) {
     #hiddenUserProfile { display: none }
+    #menu-icon { display: none; }
 }
 
 ul {

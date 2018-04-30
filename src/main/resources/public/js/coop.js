@@ -25,3 +25,25 @@ function updateCoopInfo() {
         }
     });
 }
+
+function submitForm() {
+    let data = {};
+    data.work_report = getById("report").value;
+    //console.log(data);
+    $.ajax({
+        url: "/api/v1/coops/" + cid,
+        method: "PATCH",
+        data: JSON.stringify(data),
+        success: function(data) {
+            //console.log(data);
+            if (data === "success") {
+                getById("status").innerHTML = "Work report submitted successfully.";
+                getById("status").style.color = "green";
+                updateCoopInfo();
+            } else {
+                getById("status").innerHTML = "Something went wrong."
+                getById("status").style.color = "red";
+            }
+        }
+    });
+}

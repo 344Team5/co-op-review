@@ -12,16 +12,15 @@
         <div class="container" id="workReportDiv" style="width: 100%">
             <p><a id="formHider" onclick="toggleHidden()" href="#">Submit a work report</a></p>
             <!--form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;"-->
-            <div id="reportForm" class="hidden-item">
-                <label for="review">Work report:</label>
-                <textarea id="review" name="review" form="reviewform"></textarea>
+            <form id="reportForm" onsubmit="return false" class="hidden-item" data-abide>
+                <label for="report">Work report:</label>
+                <textarea required id="report" name="report" form="reportform"></textarea>
                 <input id="coopIDInput" type="hidden" name="coopID" value="{{ cid }}">
-                <button class="button hollow">Submit</button>
-            </div>
+                <button type="submit" class="button hollow" onclick="submitForm()">Submit</button>
+                <h5 id="status"></h5>
+                <button type="button" onclick="toggleHidden()" class="button hollow">Close</button>
+            </form>
             <!--/form-->
-
-            <h5 id="workReportStatus"></h5>
-
         </div>
 
         <h5>Student Evaluation</h5>

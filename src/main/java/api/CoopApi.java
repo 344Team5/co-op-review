@@ -98,6 +98,34 @@ public class CoopApi extends DatabaseApi {
     // TODO: check if new values to foreign keys exist in original table before modifying coop
     public static Object patchCoop(Request request, Response response) {
         Object result = "";
+        JSONObject data = new JSONObject(request.body());
+        int cid = Integer.parseInt(request.params().get(":cid"));
+        Map<String, Object> dataMap = data.toMap();
+        for (Map.Entry<String,Object> entry : dataMap.entrySet() ) {
+            Connection c = db();
+            PreparedStatement st = null;
+            if (c != null) {
+                try {
+                    if ( entry.getKey().equals("work_report")) {
+                        st = c.prepareStatement("UPDATE coops SET work_report = ? WHERE id = ?");
+                        st.setString(1, entry.getValue().toString());
+                        st.setInt(2, cid);
+                        st.execute();
+                        result = "success";
+                    } else if (entry.getKey().equals("student_eval")) {
+                        st = c.prepareStatement("UPDATE coops SET student_eval = ? WHERE id = ?");
+                        st.setString(1, entry.getValue().toString());
+                        st.setInt(2, cid);
+                        st.execute();
+                        result = "success";
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+        /*
         Map<String,String> dataMap = getAjaxData(request);
 
         if (dataMap != null) {
@@ -140,8 +168,8 @@ public class CoopApi extends DatabaseApi {
                 }
             }
         }
+        */
 
-        return result;
     }
 
     public static Object deleteCoop(Request request, Response response) {
