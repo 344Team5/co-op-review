@@ -108,7 +108,7 @@ public class CoopReview implements SparkApplication {
         }));
 
         get("/students/:sid", ((request, response) -> { // "logged in" page
-            Map<String, Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             model.put("sid", request.params(":sid"));
 
             // Get jobs from the GitHub jobs API
@@ -128,8 +128,9 @@ public class CoopReview implements SparkApplication {
 
         // Form to register a new Coop
         get("/coops/new/", (request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
             return templateEngine.render(
-                    new ModelAndView(null, "registerCoop.hbs")
+                    new ModelAndView(model, "registerCoop.hbs")
             );
         });
 
@@ -155,7 +156,7 @@ public class CoopReview implements SparkApplication {
         */
         // Specific Co-op page
         get("/coops/:cid", ((request, response) -> {
-            Map<String, Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             model.put("cid",request.params(":cid"));
             return templateEngine.render(
                 new ModelAndView(model, "coop.hbs")
@@ -164,7 +165,7 @@ public class CoopReview implements SparkApplication {
 
         // Form for External Reviewer to submit a StudentEvaluation
         get("/coops/:cid/eval/:token", ((request, response) -> { // external reviewer completing student eval
-            Map<String, Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             //validate token?
             model.put("cid", request.params(":cid"));
             model.put("token", request.params(":token"));
@@ -186,13 +187,13 @@ public class CoopReview implements SparkApplication {
 
         // All Employers page
         get("/employers", (request, response) -> {
-            Map<String,Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             return templateEngine.render(new ModelAndView(model, "employers.hbs"));
         });
 
         // Employer page
         get("/employers/:eid", (request, response) -> {
-            Map<String,Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             model.put("eid",request.params(":eid"));
             return templateEngine.render(new ModelAndView(model, "employer.hbs"));
         });
@@ -221,7 +222,7 @@ public class CoopReview implements SparkApplication {
                         new ModelAndView(data, "admin.hbs")
                 );
             } else {
-                return genericErrorPage(response,
+                return genericErrorPage(request, response,
                         "401: You're not allowed to go there!",
                         401,
                         templateEngine);
@@ -229,12 +230,12 @@ public class CoopReview implements SparkApplication {
         });
     }
 
-    private Object genericErrorPage(Response response, String message, int statusCode, TemplateEngine templateEngine) {
-        Map<String, Object> data = new HashMap<>();
+    private Object genericErrorPage(Request request, Response response, String message, int statusCode, TemplateEngine templateEngine) {
+        Map<String, Object> model = buildModel(request,response);
         response.status(statusCode);
-        data.put("message", message);
+        model.put("message", message);
         return templateEngine.render(
-                new ModelAndView(data, "error.hbs")
+                new ModelAndView(model, "error.hbs")
         );
     }
 

@@ -1,21 +1,6 @@
 {{! Login page }}
 {{#partial "body"}}
-    <div id="metanav">
-        <ul>
-            <li id="metarithome"><a href="http://www.rit.edu/" title="RIT Home"><img src="/img/idbar-orange.gif"></a></li>
-            <li id="metaritsearch">
-                <div id="metaritsearchdiv">
-                    <form id="metasearchform" method="get" action="https://www.rit.edu/search/">
-                        <div>
-                            <input id="metaritsearchbox" class="faded" name="q" type="text" value="Search RIT" maxlength="250" alt="Search box" onfocus="focusSearch(this)" onblur="blurSearch(this)">
-                            <button title="Submit Search">Search</button>
-                        </div>
-                    </form>
-                </div>
-            </li>
-            <li id="metaritdirectories"><a href="http://www.rit.edu/directories/">Directories</a></li>
-        </ul>
-    </div>
+    {{> signedin.hbs }}
 
     <div class="container">
 

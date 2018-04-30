@@ -20,6 +20,8 @@ function updateCoopInfo() {
             if (coop.work_report) {
                 getById("workReportDiv").innerHTML = coop.work_report;
             }
+
+            setStudentName(getById("studentName"),coop.student_uid);
         }
     });
 }
