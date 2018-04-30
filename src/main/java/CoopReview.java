@@ -87,48 +87,32 @@ public class CoopReview implements SparkApplication {
         get("/logout", new LogoutRoute(config, "/"));
 
         /* ------------------ */
-        get("/session",
-                (request, response) ->
-                        new ModelAndView(buildModel(request,response), "session.hbs"), templateEngine);
-
         get("/github",
                 (request, response) ->
-                        new ModelAndView(addGithub(buildModel(request,response),request,response),
-                                "github.hbs"), templateEngine);
+                        new ModelAndView(buildModel(request,response), "github.hbs"), templateEngine);
         /* ------------------ */
     }
 
     private void frontEndPageRoutes(TemplateEngine templateEngine) {
-        before((req, res) -> { // redirect requests with trailing '/'
+        before((req, res) -> {
             System.out.println("Received request: " + req.requestMethod() + " " + req.url());
         });
 
-        /*// Homepage (Login
-        get("/", (request, response) -> {
-            return templateEngine.render(
-                    new ModelAndView(null, "login.hbs")
-            );
-        });
-        */
-        // Handle POST from login form
-        post("/", ((request, response) -> { // this will be login in R2
-            if (request.queryParams("username").equals("admin")) {
+        get("/student", ((request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
+            String userid = model.get("userid").toString();
+            boolean isAdmin = StudentApi.isAdmin(userid);
+            if (isAdmin) {
                 response.redirect("/admin");
+            } else {
+                response.redirect("/students/"+userid);
             }
-            response.redirect("/student");
             return "";
         }));
 
-        // Logged-in Student homepage
-        get("/student", ((request, response) -> { // "logged in" page
-            Map<String, Object> data = new HashMap<>();
-            //Student s = db.getStudentDao().get(1);
-            //data.put("student", s);
-            //List<Coop> coops = new ArrayList<>();
-            //for ( int id : s.getCoopIDs() ) {
-            //    coops.add(db.getCoopDao().get(id));
-            //}
-            //data.put("coops", coops);
+        get("/students/:sid", ((request, response) -> { // "logged in" page
+            Map<String, Object> model = buildModel(request,response);
+            model.put("sid", request.params(":sid"));
 
             // Get jobs from the GitHub jobs API
             List<Map<String, Object>> jobList = new ArrayList<>();
@@ -138,21 +122,23 @@ public class CoopReview implements SparkApplication {
                     jobList.add(o.toMap());
                 }
             }
-            data.put("jobs", jobList);
+            model.put("jobs", jobList);
 
             return templateEngine.render(
-                    new ModelAndView(data, "studentHome.hbs")
+                    new ModelAndView(model, "student.hbs")
             );
         }));
 
         // Form to register a new Coop
-        get("/student/coops/register", (request, response) -> {
+        get("/coops/new/", (request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
             return templateEngine.render(
-                    new ModelAndView(null, "registerCoop.hbs")
+                    new ModelAndView(model, "registerCoop.hbs")
             );
         });
 
-        // Handle POST from new Coop form
+        /*
+        // POST now handled by API
         post("/student/coops/register", ((request, response) -> { // this will be login in R2
             Map<String, Object> data = new HashMap<>();
             data.put("success", true);
@@ -160,7 +146,8 @@ public class CoopReview implements SparkApplication {
             return "";
         }));
 
-        // Handle POST of Work Report form
+
+        // POST now handled by API
         post("/student/coops/workreport", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("coopID"));
@@ -169,31 +156,29 @@ public class CoopReview implements SparkApplication {
             response.redirect("/student/coops?id=" + id);
             return "";
         });
+        */
+        // Specific Co-op page
+        get("/coops/:cid", ((request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
+            model.put("cid",request.params(":cid"));
+            return templateEngine.render(
+                new ModelAndView(model, "coop.hbs")
+            );
+        }));
 
-        // Specific Co-op page, query by ID in R2
-        get("/student/coops", ((request, response) -> {
-            if (request.queryParams().contains("id")) {
-                Map<String, Object> data = new HashMap<>();
-                int id = Integer.parseInt(request.queryParams("id"));
-                //data.put("coop", db.getCoopDao().get(id));
-                return templateEngine.render(
-                        new ModelAndView(data, "coop.hbs")
-                );
-            } else {
-                return ""; // This should 404 if no id was provided
-            }
+        // Form for External Reviewer to submit a StudentEvaluation
+        get("/coops/:cid/eval/:token", ((request, response) -> { // external reviewer completing student eval
+            Map<String, Object> model = buildModel(request,response);
+            //validate token?
+            model.put("cid", request.params(":cid"));
+            model.put("token", request.params(":token"));
+            return templateEngine.render(
+                    new ModelAndView(model, "evaluateStudent.hbs")
+            );
         }));
 
         /*
-        // Form for External Reviewer to submit a StudentEvaluation
-        get("/review/:token", ((request, response) -> { // external reviewer completing student eval
-            return templateEngine.render(
-                    new ModelAndView(db.getCoopDao().get(request.params("token")), "evaluateStudent.hbs")
-            );
-        }));
-       */
-
-        // Handle POST from StudentEvaluation form
+        // POST handled by API
         post("/review/:token", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             data.put("success", true);
@@ -201,31 +186,23 @@ public class CoopReview implements SparkApplication {
                     new ModelAndView(data, "evaluateStudent.hbs")
             );
         });
+       */
 
-        // All Employers page, unless given specific query in R2
+        // All Employers page
+        get("/employers", (request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
+            return templateEngine.render(new ModelAndView(model, "employers.hbs"));
+        });
+
+        // Employer page
         get("/employers/:eid", (request, response) -> {
-            /*
-            if (request.queryParams().contains("id")) {
-                Map<String, Object> data = new HashMap<>();
-                int id = Integer.parseInt(request.queryParams("id"));
-                //data.put("employer", db.getEmployerDao().get(id));
-                return templateEngine.render(
-                        new ModelAndView(data, "employer.hbs")
-                );
-            } else {
-                Map<String, Object> data = new HashMap<>();
-                //data.put("employers", db.getEmployerDao().getAll());
-                return templateEngine.render(
-                        new ModelAndView(data, "employers.hbs")
-                );
-            }
-            */
-            Map<String,Object> model = new HashMap<>();
+            Map<String, Object> model = buildModel(request,response);
             model.put("eid",request.params(":eid"));
             return templateEngine.render(new ModelAndView(model, "employer.hbs"));
         });
 
-        // Handle POST from Employer Review form
+        /*
+        // POST handled by API
         post("/employers/:eid/review", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("employerID"));
@@ -236,34 +213,51 @@ public class CoopReview implements SparkApplication {
                     new ModelAndView(data, "employer.hbs")
             );
         });
+        */
 
         // Admin control main page
         get("/admin", (request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            //data.put("coops", db.getCoopDao().getAll());
-            //data.put("employers", db.getEmployerDao().getAll());
-            return templateEngine.render(
-                    new ModelAndView(data, "admin.hbs")
-            );
+            Map<String, Object> model = buildModel(request,response);
+            String userid = model.get("userid").toString();
+            boolean canAccess = StudentApi.isAdmin(userid);
+            if (canAccess) {
+                return templateEngine.render(
+                        new ModelAndView(model, "admin.hbs")
+                );
+            } else {
+                return genericErrorPage(request, response,
+                        "401: You're not allowed to go there!",
+                        401,
+                        templateEngine);
+            }
         });
+    }
+
+    private Object genericErrorPage(Request request, Response response, String message, int statusCode, TemplateEngine templateEngine) {
+        Map<String, Object> model = buildModel(request,response);
+        response.status(statusCode);
+        model.put("message", message);
+        return templateEngine.render(
+                new ModelAndView(model, "error.hbs")
+        );
     }
 
     private void errorPageRoutes(TemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("message", "404: Whoops, couldn't find that page!");
+            Map<String, Object> model = new HashMap<>();
+            model.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
-                    new ModelAndView(data, "error.hbs")
+                    new ModelAndView(model, "error.hbs")
             );
         });
 
         // handle 500 error
         internalServerError((request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("message", "500: Something went wrong...");
+            Map<String, Object> model = new HashMap<>();
+            model.put("message", "500: Something went wrong...");
             return templateEngine.render(
-                    new ModelAndView(data, "error.hbs")
+                    new ModelAndView(model, "error.hbs")
             );
         });
     }
@@ -278,9 +272,11 @@ public class CoopReview implements SparkApplication {
 
                 path("/:sid", () -> { // one student
                     get("", StudentApi::getStudent); // read
-                    put("", StudentApi::putStudent); // update/replace
+                    //put("", StudentApi::putStudent); // update/replace
                     patch("", StudentApi::patchStudent); // update/modify
                     delete("", StudentApi::deleteStudent); // delete
+
+                    get("/coops", StudentApi::getCoops); // get student with their co-ops
                 });
 
             });
@@ -290,7 +286,7 @@ public class CoopReview implements SparkApplication {
 
                 path("/:eid", () -> { // one employer
                     get("", EmployerApi::getEmployer); // read
-                    put("", EmployerApi::putEmployer); // update/replace
+                    //put("", EmployerApi::putEmployer); // update/replace
                     patch("", EmployerApi::patchEmployer); // update/modify
                     delete("", EmployerApi::deleteEmployer); // delete
                 });
@@ -302,9 +298,11 @@ public class CoopReview implements SparkApplication {
 
                 path("/:cid", () -> { // one co-op
                     get("", CoopApi::getCoop); // read
-                    put("", CoopApi::putCoop); // update/replace
+                    //put("", CoopApi::putCoop); // update/replace
                     patch("", CoopApi::patchCoop); // update/modify
                     delete("", CoopApi::deleteCoop); // delete
+
+                    post("/eval/:token", CoopApi::handleStudentEval); // handle student evaluation form
                 });
             });
         });
@@ -323,35 +321,16 @@ public class CoopReview implements SparkApplication {
         return port;
     }
 
-    private static java.util.List<CommonProfile> getProfiles(final Request request,
+    private static List<CommonProfile> getProfiles(final Request request,
                                                              final Response response) {
         final SparkWebContext context = new SparkWebContext(request, response);
         final ProfileManager manager = new ProfileManager(context);
         return manager.getAll(true);
     }
 
-    /**
-     add github information to the session
-     */
-    private static Map addGithub(Map model, Request request, Response response) {
-        GitHubProfile ghp = ((GitHubProfile)(model.get("ghp")));
-        if (ghp == null) {
-            System.out.println("No github profile");
-            return model;
-        }
-        try {
-            String accessToken = ghp.getAccessToken();
-            GitHub gh = null;
-            gh =  GitHub.connect( model.get("userid").toString(), accessToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return model;
-    }
+    private static Map<String,Object> buildModel(Request request, Response response) {
 
-    private static Map buildModel(Request request, Response response) {
-
-        final Map model = new HashMap<String,Object>();
+        final Map<String,Object> model = new HashMap<>();
 
         Map<String, Object> map = new HashMap<String, Object>();
         for (String k: request.session().attributes()) {
@@ -363,7 +342,7 @@ public class CoopReview implements SparkApplication {
 
         java.util.List<CommonProfile> userProfiles = getProfiles(request,response);
 
-        map.put("profiles", userProfiles);
+
 
         try {
             if (userProfiles.size()>0) {
@@ -376,6 +355,9 @@ public class CoopReview implements SparkApplication {
                 model.put("name",ghp.getDisplayName());
                 model.put("avatar_url",ghp.getPictureUrl());
                 model.put("email",ghp.getEmail());
+                if (StudentApi.isAdmin(ghp.getUsername())) {
+                    model.put("admin", "true");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -386,7 +368,6 @@ public class CoopReview implements SparkApplication {
 
     private HashMap<String,String> getEnvironmentVariables(String... variables) {
         HashMap<String,String> envVars = new HashMap<String,String>();
-
 
         for (String k : variables) {
             String v = System.getenv(k);

@@ -2,44 +2,47 @@
 {{> signedin.hbs}}
 
 {{#partial "body"}}
+    <div class="container">
 
-<h3>Co-op at {{ coop.employer.name }} </h3>
-<p>Start date:  {{ coop.startDate }} </p>
-<p>End date: {{ coop.endDate }} </p>
+        <h3><span id="studentName">...</span>'s Co-op at <span id="employerName">...</span></h3>
+        <p>Start date: <span id="startDate">...</span></p>
+        <p>End date: <span id="endDate">...</span></p>
 
-<h5>Work Report</h5>
-<p>
-    {{#coop.workReport}}{{coop.workReport}}{{/coop.workReport}}
-    {{^success}}{{^coop.workReport}}
-        <h5><a onclick="toggleHidden()" href="#">Submit a work report</a></h5>
-        <form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;">
-            <label for="review">Work report:</label>
-            <textarea id="review" name="review" form="reviewform"></textarea>
-            <input type="hidden" name="coopID" value={{coop.id}}>
-            <input type="submit" value="Submit">
-        </form>
-    {{/coop.workReport}}{{/success}}
-    {{#success}}<h5>Review submitted successfully.</h5>{{/success}}
-</p>
+        <h5>Work Report</h5>
+        <div class="container" id="workReportDiv" style="width: 100%">
+            <p><a id="formHider" onclick="toggleHidden()" href="#">Submit a work report</a></p>
+            <!--form id="reportform" action="/student/coops/workreport" method="POST" style="display: none;"-->
+            <div id="reportForm" class="hidden-item">
+                <label for="review">Work report:</label>
+                <textarea id="review" name="review" form="reviewform"></textarea>
+                <input id="coopIDInput" type="hidden" name="coopID" value="{{ cid }}">
+                <button class="button hollow">Submit</button>
+            </div>
+            <!--/form-->
 
-<h5>Student Evaluation</h5>
-<i><a href="#">Send this link to employer for evaluations</a></i>
-<p>
-    {{#coop.studentEvaluation}}{{coop.studentEvaluation}}{{/coop.studentEvaluation}}
-    {{^coop.studentEvaluation}}No student evaluation has been completed for this co-op.{{/coop.studentEvaluation}}
-</p>
+            <h5 id="workReportStatus"></h5>
 
+        </div>
 
-<script>
-    function toggleHidden() {
-        var form = document.getElementById("reportform");
-        if (form.style.display === "none") {
-            form.style.display = "block";
-        } else {
-            form.style.display = "none";
+        <h5>Student Evaluation</h5>
+        <div class="container" style="width: 100%">
+            <div id="eval">
+                <a id="evalLink" href="#">Send this link to your manager at your co-op employer for evaluation.</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleHidden() {
+            getById("reportForm").classList.toggle("hidden-item");
+            getById("formHider").classList.toggle("hidden-item");
         }
-    }
-</script>
+
+        var cid = "{{ cid }}";
+    </script>
+
+    <script src="/js/coop.js"></script>
 
 {{/partial}}
 

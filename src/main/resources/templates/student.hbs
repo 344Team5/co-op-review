@@ -3,23 +3,55 @@
 
 {{#partial "body"}}
 
-    <div class="container text-center">
-        <h3>Welcome, {{ student.name }} </h3>
+    <div class="container">
+        <h2 id="greeting">Welcome</h2>
         <p>Select a Co-op:</p>
-        <ul>
-            {{#each coops}}
-                <li><a href="./student/coops?id={{id}}">Co-op at {{employer}}</a></li>
-            {{/each}}
+        <ul id="coops">
 
-            {{#unless coops}}<li>No co-ops were found.</li>{{/unless}}
         </ul>
-        <p>Need to add a new co-op?</p>
-        <p><a href="./student/coops/register/">Register a Co-op</a></p>
-
-{{> externalApiInfo.hbs }}
-
     </div>
 
+    <div id="submitCoopDiv" class="container">
+        <p>Need to add a new co-op?</p>
+        <button class="button hollow small" id="formHider" onclick="toggleHidden()">Click here</button>
+
+        <div id="coopForm" class="hidden-item">
+            <h4>Submit a new co-op:</h4>
+            <!-- AJAX POST to /api/v1/coops -->
+            <form id="form" action="/api/v1/coops" method="POST" data-abide>
+                <label for="employer">Employer:</label>
+                <select required id="employer" name="employer">
+
+                </select>
+                <label for="startDate">Start date:</label>
+                <input required type="date" id="startDate" name="startDate">
+                <label for="endDate">End date:</label>
+                <input required type="date" id="endDate" name="endDate">
+                <button class="button hollow" type="submit">Submit</button>
+            </form>
+
+            <p style="font-style:italic">
+                If your co-op employer is not in the list, contact the co-op office to have them approved and added.
+            </p>
+
+            <div>
+                <p id="status"></p>
+                <button class="button hollow" onclick="toggleHidden()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    {{> externalApiInfo.hbs }}
+
+    <script>
+        function toggleHidden() {
+            getById("coopForm").classList.toggle("hidden-item");
+            getById("formHider").classList.toggle("hidden-item");
+        }
+
+        var sid = "{{sid}}";
+    </script>
+    <script src="/js/student.js"></script>
 {{/partial}}
 
 {{> base.hbs}}

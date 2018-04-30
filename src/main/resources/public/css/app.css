@@ -1,0 +1,91 @@
+.container {
+    width: 70%;
+    max-width: 1200px;
+    min-width: 380px;
+    margin: auto;
+    background-color: aliceblue;
+    border: 1px solid floralwhite;
+    padding: 30px;
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.55)
+    ), url("/img/campus.jpg") no-repeat fixed center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+footer {
+    text-align: center;
+    color: lightgrey;
+}
+
+.hidden-item {
+    display: none;
+}
+
+#profileIcon {
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 20px;
+    max-width: 60px;
+}
+
+#profileName {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 14px;
+}
+
+#userProfile {
+    position: absolute;
+    right: 20px;
+}
+
+#hiddenUserProfile {
+    height: 100px;
+    background-color: #111;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+#hiddenLogout {
+    display: inline;
+}
+
+#title-tiger {
+    max-width: 100px;
+    position: absolute;
+    left: 20px;
+}
+
+#title-bar {
+    min-width: 380px;
+}
+
+#menu-icon {
+    width: 60px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 730px) {
+    #title-tiger { display: none; }
+    #userProfile { display: none; }
+    #menu-icon { display: inline; }
+    .title-bar-title { margin: auto; }
+}
+@media screen and (min-width: 731px) {
+    #hiddenUserProfile { display: none }
+}
+
+ul {
+    list-style: none;
+}

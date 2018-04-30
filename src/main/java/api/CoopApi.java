@@ -4,6 +4,7 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CoopApi extends DatabaseApi {
@@ -34,7 +35,36 @@ public class CoopApi extends DatabaseApi {
     }
 
     public static Object addCoop(Request request, Response response) {
-        return "Add a Coop";
+        Object result = "";
+        Map<String,String> dataMap = new HashMap<>();
+        dataMap.put("start_date", "2017-09-12");
+        dataMap.put("end_date", "2018-1-12");
+        dataMap.put("student_uid", "dwg7486");
+        dataMap.put("employer_id", "1");
+        Connection c = db();
+        PreparedStatement st = null;
+        if (c != null) {
+            try {
+                st = db().prepareStatement("INSERT INTO coops (start_date, end_date, student_uid, employer_id) VALUES (?,?,?,?);");
+                st.setDate(1, Date.valueOf(dataMap.get("start_date")));
+                st.setDate(2, Date.valueOf(dataMap.get("end_date")));
+                st.setString(3, dataMap.get("student_uid"));
+                st.setInt(4, Integer.parseInt(dataMap.get("employer_id")));
+                st.execute();
+                result = "success";
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (st != null) {
+                    try {
+                        st.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Object getCoop(Request request, Response response) {
@@ -139,5 +169,9 @@ public class CoopApi extends DatabaseApi {
             }
         }
         return result;
+    }
+
+    public static Object handleStudentEval(Request request, Response response) {
+        return null;
     }
 }
