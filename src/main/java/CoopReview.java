@@ -98,12 +98,15 @@ public class CoopReview implements SparkApplication {
             System.out.println("Received request: " + req.requestMethod() + " " + req.url());
         });
 
-        // Handle POST from login form
-        post("/", ((request, response) -> { // this will be login in R2
-            if (request.queryParams("username").equals("admin")) {
+        get("/student", ((request, response) -> {
+            Map<String, Object> model = buildModel(request,response);
+            String userid = model.get("userid").toString();
+            boolean isAdmin = StudentApi.isAdmin(userid);
+            if (isAdmin) {
                 response.redirect("/admin");
+            } else {
+                response.redirect("/students/"+userid);
             }
-            response.redirect("/student");
             return "";
         }));
 
@@ -214,12 +217,12 @@ public class CoopReview implements SparkApplication {
 
         // Admin control main page
         get("/admin", (request, response) -> {
-            Map<String, Object> data = buildModel(request,response);
-            String userid = data.get("userid").toString();
+            Map<String, Object> model = buildModel(request,response);
+            String userid = model.get("userid").toString();
             boolean canAccess = StudentApi.isAdmin(userid);
             if (canAccess) {
                 return templateEngine.render(
-                        new ModelAndView(data, "admin.hbs")
+                        new ModelAndView(model, "admin.hbs")
                 );
             } else {
                 return genericErrorPage(request, response,
@@ -242,19 +245,19 @@ public class CoopReview implements SparkApplication {
     private void errorPageRoutes(TemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("message", "404: Whoops, couldn't find that page!");
+            Map<String, Object> model = new HashMap<>();
+            model.put("message", "404: Whoops, couldn't find that page!");
             return templateEngine.render(
-                    new ModelAndView(data, "error.hbs")
+                    new ModelAndView(model, "error.hbs")
             );
         });
 
         // handle 500 error
         internalServerError((request, response) -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("message", "500: Something went wrong...");
+            Map<String, Object> model = new HashMap<>();
+            model.put("message", "500: Something went wrong...");
             return templateEngine.render(
-                    new ModelAndView(data, "error.hbs")
+                    new ModelAndView(model, "error.hbs")
             );
         });
     }
