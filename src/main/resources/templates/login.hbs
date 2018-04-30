@@ -31,14 +31,12 @@
 
                     <div class="text-center">
                         {{#unless ghp}}
-                            <h3><a href="/login">Login with GitHub</a></h3>
+                            <a href="/login"><button class="button hollow large">Login with GitHub</button></a>
                         {{/unless}}
                         {{#if ghp}}
                             <a href="/github">Go to GitHub info page</a>
                         {{/if}}
                     </div>
-
-                    <button class="button hollow large" type="submit" name="_eventId_proceed" onclick="this.childNodes[0].nodeValue='Logging in, please wait...'">Log in</button>
                 </form>
             </div>
             <br>
@@ -49,6 +47,15 @@
     <script>
         var link = $("<link />",{ rel: "stylesheet", type: "text/css", href: "/css/ritsignin.css" });
         $('head').append(link);
+
+        {{#if ghp}}
+            {{#if admin}}
+                window.location.replace("/admin");
+            {{/if}}
+            {{#unless admin}}
+                window.location.replace("/students/" + {{userid}});
+            {{/unless}}
+        {{/if}}
     </script>
 
 

@@ -339,7 +339,7 @@ public class CoopReview implements SparkApplication {
 
         java.util.List<CommonProfile> userProfiles = getProfiles(request,response);
 
-        //map.put("profiles", userProfiles);
+
 
         try {
             if (userProfiles.size()>0) {
@@ -352,6 +352,9 @@ public class CoopReview implements SparkApplication {
                 model.put("name",ghp.getDisplayName());
                 model.put("avatar_url",ghp.getPictureUrl());
                 model.put("email",ghp.getEmail());
+                if (StudentApi.isAdmin(ghp.getUsername())) {
+                    model.put("admin", "true");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
