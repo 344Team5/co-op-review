@@ -1,19 +1,75 @@
 {{! Login page }}
 {{#partial "body"}}
+    <div id="metanav">
+        <ul>
+            <li id="metarithome"><a href="http://www.rit.edu/" title="RIT Home"><img src="/img/idbar-orange.gif"></a></li>
+            <li id="metaritsearch">
+                <div id="metaritsearchdiv">
+                    <form id="metasearchform" method="get" action="https://www.rit.edu/search/">
+                        <div>
+                            <input id="metaritsearchbox" class="faded" name="q" type="text" value="Search RIT" maxlength="250" alt="Search box" onfocus="focusSearch(this)" onblur="blurSearch(this)">
+                            <button title="Submit Search">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li id="metaritdirectories"><a href="http://www.rit.edu/directories/">Directories</a></li>
+        </ul>
+    </div>
 
-    <img src="/img/rit.jpg">
+    <div class="container">
 
-    <h1 class="top-bar">RIT Co-op Review</h1>
+        <div class="well" align="center">
 
-    {{#unless session}}
-        {{#unless ghp}}
-            <h3><a href="/login">Login with GitHub</a></h3>
-        {{/unless}}
+            <h2>RIT CO-OP Login</h2>
+            <p></p>
+
+            <p>
+                Login to co-ops.rit.edu
+            </p>
+
+            <div id="userInput">
+                <form action="/" method="POST" role="form">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">RIT Username</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="username" name="username" type="text" value="" placeholder="RIT Username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="password" name="password" type="password" value="" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-default" type="submit" name="_eventId_proceed" onclick="this.childNodes[0].nodeValue='Logging in, please wait...'">Log in</button>
+                </form>
+            </div>
+            <br>
+            <p>Need assistance? Please contact <a href="#">Daniel Krutz</a></p>
+            <br>
+        </div>
+    </div>
+
+    <!--<img src="/img/rit.jpg">-->
+
+    <!--<h1 class="top-bar">RIT Co-op Review</h1>-->
+
+    <!--<form action="/" method="POST">-->
+        <!--<label for="username">Username</label>-->
+        <!--<input type="text" name="username">-->
+        <!--<label for="password">Password</label>-->
+        <!--<input type="password" name="password">-->
+        <!--<input type="submit" value="Submit">-->
+    <!--</form>-->
+
+    {{#unless ghp}}
+        <h3><a href="/login">Login with GitHub</a></h3>
     {{/unless}}
-    {{#if session}}
-        {{#if ghp}}
-            <script>window.location.replace("https://co-op-review.herokuapp.com/student")</script>
-        {{/if}}
+    {{#if ghp}}
+            <a href="/github">Go to GitHub info page</a>
     {{/if}}
 
 {{/partial}}

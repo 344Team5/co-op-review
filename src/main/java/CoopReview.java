@@ -1,10 +1,5 @@
-import api.CoopApi;
-import api.DatabaseApi;
-import api.EmployerApi;
-import api.StudentApi;
-import db.FakeDB;
-import model.Coop;
-import model.Student;
+import api.*;
+import oauth.OAuthConfigFactory;
 import org.json.JSONObject;
 import org.kohsuke.github.GitHub;
 import org.pac4j.core.config.Config;
@@ -17,14 +12,10 @@ import org.pac4j.sparkjava.LogoutRoute;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.TemplateEngine;
 import spark.servlet.SparkApplication;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,43 +26,48 @@ import static spark.Spark.*;
 /**
  * Co-op Review Main class
  * Handles configuring and starting the web server
- * and OAuth login using code from github/pconrad
+ * and OAuth login using example code from github/pconrad
  */
 public class CoopReview implements SparkApplication {
     /**
      * Set up the web application and handle requests
      */
     public void init() {
-        port(assignPort()); // figure out which port to use
-        DatabaseApi db = new DatabaseApi();
+        port(assignPort()); // figure out which port to use;
 
         HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine(); // create template engine to render pages
 
         staticFiles.location("/public"); // set static files location to /public in resources
 
-        gitHubOAuthSetup(templateEngine);
+        SecurityFilter githubFilter = createSecurityFilter(templateEngine);
+        gitHubOAuthSetup(templateEngine, githubFilter);
         frontEndPageRoutes(templateEngine);
         errorPageRoutes(templateEngine);
-        internalAPIRoutes(db);
+        internalAPIRoutes(githubFilter);
     }
 
-    private void gitHubOAuthSetup(HandlebarsTemplateEngine templateEngine) {
+    private Config buildConfig(TemplateEngine templateEngine){
         HashMap<String,String> envVars =
-                getNeededEnvVars(new String []{ "GITHUB_CLIENT_ID",
+                getEnvironmentVariables("GITHUB_CLIENT_ID",
                         "GITHUB_CLIENT_SECRET",
                         "GITHUB_CALLBACK_URL",
-                        "APPLICATION_SALT"});
+                        "APPLICATION_SALT");
 
-        Config config = new
+        return new
                 OAuthConfigFactory(envVars.get("GITHUB_CLIENT_ID"),
                 envVars.get("GITHUB_CLIENT_SECRET"),
                 envVars.get("GITHUB_CALLBACK_URL"),
                 envVars.get("APPLICATION_SALT"),
                 templateEngine).build();
+    }
 
-        final SecurityFilter
-                githubFilter = new SecurityFilter(config, "GithubClient", "", "");
+    private SecurityFilter createSecurityFilter(TemplateEngine templateEngine) {
+        Config config = buildConfig(templateEngine);
+        return new SecurityFilter(config, "GithubClient", "", "");
+    }
 
+    private void gitHubOAuthSetup(TemplateEngine templateEngine, SecurityFilter githubFilter) {
+        Config config = buildConfig(templateEngine);
         final org.pac4j.sparkjava.CallbackRoute callback =
                 new org.pac4j.sparkjava.CallbackRoute(config);
 
@@ -89,22 +85,22 @@ public class CoopReview implements SparkApplication {
                 templateEngine);
 
         get("/logout", new LogoutRoute(config, "/"));
+
+        /* ------------------ */
+        get("/session",
+                (request, response) ->
+                        new ModelAndView(buildModel(request,response), "session.hbs"), templateEngine);
+
+        get("/github",
+                (request, response) ->
+                        new ModelAndView(addGithub(buildModel(request,response),request,response),
+                                "github.hbs"), templateEngine);
+        /* ------------------ */
     }
 
-    private void frontEndPageRoutes(HandlebarsTemplateEngine templateEngine) {
-        FakeDB.getFakeDB(); // initialize FakeDB
-        DatabaseApi db = new DatabaseApi(); // create db API
-
-        /*
+    private void frontEndPageRoutes(TemplateEngine templateEngine) {
         before((req, res) -> { // redirect requests with trailing '/'
-            String path = req.pathInfo();
-            if (path.endsWith("/") && !path.equals("/"))
-                res.redirect(path.substring(0, path.length() - 1));
-        });
-        */
-
-        before((req, res) -> { // redirect requests with trailing '/'
-            System.out.println("Received request: " + req.url());
+            System.out.println("Received request: " + req.requestMethod() + " " + req.url());
         });
 
         /*// Homepage (Login
@@ -113,7 +109,7 @@ public class CoopReview implements SparkApplication {
                     new ModelAndView(null, "login.hbs")
             );
         });
-
+        */
         // Handle POST from login form
         post("/", ((request, response) -> { // this will be login in R2
             if (request.queryParams("username").equals("admin")) {
@@ -121,18 +117,18 @@ public class CoopReview implements SparkApplication {
             }
             response.redirect("/student");
             return "";
-        }));*/
+        }));
 
         // Logged-in Student homepage
         get("/student", ((request, response) -> { // "logged in" page
             Map<String, Object> data = new HashMap<>();
-            Student s = db.getStudentDao().get(1);
-            data.put("student", s);
-            List<Coop> coops = new ArrayList<>();
-            for ( int id : s.getCoopIDs() ) {
-                coops.add(db.getCoopDao().get(id));
-            }
-            data.put("coops", coops);
+            //Student s = db.getStudentDao().get(1);
+            //data.put("student", s);
+            //List<Coop> coops = new ArrayList<>();
+            //for ( int id : s.getCoopIDs() ) {
+            //    coops.add(db.getCoopDao().get(id));
+            //}
+            //data.put("coops", coops);
 
             // Get jobs from the GitHub jobs API
             List<Map<String, Object>> jobList = new ArrayList<>();
@@ -168,7 +164,7 @@ public class CoopReview implements SparkApplication {
         post("/student/coops/workreport", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("coopID"));
-            data.put("coop", db.getCoopDao().get(id));
+            //data.put("coop", db.getCoopDao().get(id));
             data.put("success", true);
             response.redirect("/student/coops?id=" + id);
             return "";
@@ -179,7 +175,7 @@ public class CoopReview implements SparkApplication {
             if (request.queryParams().contains("id")) {
                 Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
-                data.put("coop", db.getCoopDao().get(id));
+                //data.put("coop", db.getCoopDao().get(id));
                 return templateEngine.render(
                         new ModelAndView(data, "coop.hbs")
                 );
@@ -188,12 +184,14 @@ public class CoopReview implements SparkApplication {
             }
         }));
 
+        /*
         // Form for External Reviewer to submit a StudentEvaluation
         get("/review/:token", ((request, response) -> { // external reviewer completing student eval
             return templateEngine.render(
                     new ModelAndView(db.getCoopDao().get(request.params("token")), "evaluateStudent.hbs")
             );
         }));
+       */
 
         // Handle POST from StudentEvaluation form
         post("/review/:token", (request, response) -> {
@@ -205,29 +203,35 @@ public class CoopReview implements SparkApplication {
         });
 
         // All Employers page, unless given specific query in R2
-        get("/employers", (request, response) -> {
+        get("/employers/:eid", (request, response) -> {
+            /*
             if (request.queryParams().contains("id")) {
                 Map<String, Object> data = new HashMap<>();
                 int id = Integer.parseInt(request.queryParams("id"));
-                data.put("employer", db.getEmployerDao().get(id));
+                //data.put("employer", db.getEmployerDao().get(id));
                 return templateEngine.render(
                         new ModelAndView(data, "employer.hbs")
                 );
             } else {
                 Map<String, Object> data = new HashMap<>();
-                data.put("employers", db.getEmployerDao().getAll());
+                //data.put("employers", db.getEmployerDao().getAll());
                 return templateEngine.render(
                         new ModelAndView(data, "employers.hbs")
                 );
             }
+            */
+            Map<String,Object> model = new HashMap<>();
+            model.put("eid",request.params(":eid"));
+            return templateEngine.render(new ModelAndView(model, "employer.hbs"));
         });
 
         // Handle POST from Employer Review form
-        post("/employers/review", (request, response) -> {
+        post("/employers/:eid/review", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("employerID"));
-            data.put("employer", db.getEmployerDao().get(id));
+            //data.put("employer", db.getEmployerDao().get(id));
             data.put("success", true);
+            data.put("eid",request.params("eid"));
             return templateEngine.render(
                     new ModelAndView(data, "employer.hbs")
             );
@@ -236,16 +240,15 @@ public class CoopReview implements SparkApplication {
         // Admin control main page
         get("/admin", (request, response) -> {
             Map<String, Object> data = new HashMap<>();
-            data.put("coops", db.getCoopDao().getAll());
-            data.put("employers", db.getEmployerDao().getAll());
+            //data.put("coops", db.getCoopDao().getAll());
+            //data.put("employers", db.getEmployerDao().getAll());
             return templateEngine.render(
                     new ModelAndView(data, "admin.hbs")
             );
         });
-
     }
 
-    private void errorPageRoutes(HandlebarsTemplateEngine templateEngine) {
+    private void errorPageRoutes(TemplateEngine templateEngine) {
         // handle 404 error
         notFound((request, response) -> {
             Map<String, Object> data = new HashMap<>();
@@ -265,9 +268,10 @@ public class CoopReview implements SparkApplication {
         });
     }
 
-    private void internalAPIRoutes(DatabaseApi dbAPI) {
+    private void internalAPIRoutes(SecurityFilter githubFilter) {
         /* API Routes */
         path("/api/v1", () -> {
+            //before("/*", githubFilter);
             path("/students", () -> {
                 get("", StudentApi::getStudents); // get all students
                 post("", StudentApi::addStudent); // create a student
@@ -317,46 +321,6 @@ public class CoopReview implements SparkApplication {
             port = Integer.parseInt(processBuilder.environment().get("PORT"));
         }
         return port;
-    }
-
-    /**
-     * Start the web application
-     */
-    public static void main(String[] args) {
-        new CoopReview().init();
-    }
-
-    /**
-     * Example for connecting to the database. Instantiates JDBC connection.
-     *
-     * Database URL is in the following format (values can be found in the credentials for our Heroku data store):
-     * jdbc:postgresql://<host>:<port>/<dbname>?user=<username>&password=<password>&sslmode=require
-     *
-     * System.getenv() should be able to get this from the Heroku app in production.
-     *
-     * The URL can be fetched by running "heroku run echo $JDBC_DATABASE_URL --app co-op-review"
-     * Note - a backslash should prepend the variable when running the command on Linux/Mac
-     *
-     * @return returns connection to the database
-     */
-    private static Connection getConnection() throws URISyntaxException, SQLException {
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        return DriverManager.getConnection(dbUrl);
-    }
-
-    /**
-     * Alternative way to get connection that involves using the database URL directly.
-     *
-     * @return returns connection to the database
-     */
-    private Connection getConnectionAlt() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(System.getenv("JDBC_DATABASE_URL"));
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
-
-        return DriverManager.getConnection(dbUrl, username, password);
     }
 
     private static java.util.List<CommonProfile> getProfiles(final Request request,
@@ -420,30 +384,31 @@ public class CoopReview implements SparkApplication {
         return model;
     }
 
-    /**
-     return a HashMap with values of all the environment variables
-     listed; print error message for each missing one, and exit if any
-     of them is not defined.
-     */
-
-    public static HashMap<String,String> getNeededEnvVars(String [] neededEnvVars) {
+    private HashMap<String,String> getEnvironmentVariables(String... variables) {
         HashMap<String,String> envVars = new HashMap<String,String>();
 
 
-        for (String k:neededEnvVars) {
+        for (String k : variables) {
             String v = System.getenv(k);
             envVars.put(k,v);
         }
 
         boolean error=false;
-        for (String k:neededEnvVars) {
+        for (String k:variables) {
             if (envVars.get(k)==null) {
                 error = true;
-                System.err.println("Error: Must define env variable " + k);
+                System.err.println("Error: Must define environment variable " + k);
             }
         }
         if (error) { System.exit(1); }
 
         return envVars;
+    }
+
+    /**
+     * Start the web application
+     */
+    public static void main(String[] args) {
+        new CoopReview().init();
     }
 }
